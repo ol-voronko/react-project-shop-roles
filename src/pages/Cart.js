@@ -1,18 +1,23 @@
-import { cart } from "../data";
-import { endpoint } from "./Categories";
-import * as React from "react";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import Typography from "@mui/material/Typography";
-import { Button, CardActionArea, CardActions } from "@mui/material";
-import { Link } from "react-router-dom";
-import TextField from "@mui/material/TextField";
-import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { Button } from "@mui/material";
+import Card from "@mui/material/Card";
+import IconButton from "@mui/material/IconButton";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import * as React from "react";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { selectCart } from "../APIpages/selectors";
+import { endpoint } from "./Categories";
+import {
+  cartAdd,
+  cartSub,
+  cartDelete,
+  cartClear,
+} from "../APIpages/cartReducer";
+import { actionFullOrder } from "../Thunks/actionFullOrder";
 
-const goods = Object.values(cart);
-const total = goods.reduce((acc, el) => acc + el.count * +el.good.price, 0);
 const CartIcon = () => (
   <svg
     width="1em"
@@ -212,7 +217,6 @@ const CartIcon = () => (
   </svg>
 );
 export const CartEmpty = () => {
-  console.log(goods);
   return (
     <div className="cart">
       <CartIcon />
@@ -228,7 +232,10 @@ export const CartEmpty = () => {
   );
 };
 const CardCart = ({ count, good }) => {
+  const dispatch = useDispatch();
+  // const [goodCount, setGoodCount] = useState(count);
   const { name, price, images, _id } = good;
+
   return (
     <>
       <div className="card-cart">
@@ -265,6 +272,8 @@ const CardCart = ({ count, good }) => {
                   fontSize: "calc(16px + 2vmin)",
                 }}
                 style={{ padding: "0" }}
+                onClick={() => dispatch(cartSub(good))}
+                disabled={count <= 1}
               >
                 -
               </Button>
@@ -277,6 +286,7 @@ const CardCart = ({ count, good }) => {
                   marginRight: "1vw",
                   fontSize: "calc(12px + 2vmin)",
                 }}
+                // onChange={(e) => setGoodCount(e.target.value)}
                 value={count}
               />
               <Button
@@ -286,13 +296,18 @@ const CardCart = ({ count, good }) => {
                   fontSize: "calc(16px + 2vmin)",
                 }}
                 style={{ padding: "0" }}
+                onClick={() => dispatch(cartAdd(good))}
               >
                 +
               </Button>
             </div>
           </div>
           <div className="cart-result">
-            <IconButton aria-label="delete" size="large">
+            <IconButton
+              aria-label="delete"
+              size="large"
+              onClick={() => dispatch(cartDelete(good))}
+            >
               <DeleteIcon fontSize="inherit" />
             </IconButton>
             <Typography variant="h5" color="text.secondary">
@@ -306,13 +321,41 @@ const CardCart = ({ count, good }) => {
 };
 
 export const Cart = () => {
+  const cart = useSelector(selectCart);
+  const goods = Object.values(cart);
+  return <>{goods.length ? <CartFull goods={goods} /> : <CartEmpty />}</>;
+};
+
+const CartFull = ({ goods }) => {
+  const dispatch = useDispatch();
+
+  const total = goods.reduce(
+    (acc, { count, good: { price } }) => acc + count * price,
+    0
+  );
+
   return (
     <div className="cart-full">
       <h3>Ваше замовлення</h3>
+
       {goods.map(({ count, good }) => (
-        <CardCart good={good} count={count} /> // props={good:..., count:...}   // <CardCart {...good}/> => props=good
+        <CardCart key={good._id} good={good} count={count} /> // props={good:..., count:...}   // <CardCart {...good}/> => props=good
       ))}
       <p>До оплати без доставки: {total} грн</p>
+      <Button
+        variant="contained"
+        sx={{ mt: 3, mb: 2, backgroundColor: "error.light" }}
+        onClick={() => dispatch(cartClear())}
+      >
+        Очистити кошик
+      </Button>
+      <Button
+        variant="contained"
+        sx={{ mt: 3, mb: 2 }}
+        onClick={() => dispatch(actionFullOrder())}
+      >
+        Оформити замовлення
+      </Button>
     </div>
   );
 };

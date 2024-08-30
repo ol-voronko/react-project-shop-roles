@@ -5,32 +5,26 @@ import React from "react";
 import { Link, Route, Router, Switch } from "react-router-dom";
 import { Button } from "@mui/material";
 import "./App.css";
-import { categories } from "./data";
+
 import { PageMain } from "./pages/Categories";
 import { Login } from "./pages/Login";
 import { Register } from "./pages/Register";
 import { PageCategory } from "./pages/PageCategory";
 import { PageGood } from "./pages/PageGood";
 import { History } from "./pages/History";
-import { ResponsiveDrawer } from "./pages/AdminPage.js";
+import { AdminPage } from "./pages/AdminPage.js";
 import Header from "./pages/Header";
 import { Cart, CartEmpty } from "./pages/Cart";
 import { Order } from "./pages/Order.js";
 import { Orders } from "./pages/Orders.js";
+import { api, store } from "./APIpages/api.js";
+import { ProtectedRoute } from "./pages/ProtectedRoute.js";
+import { GoodsSearch } from "./pages/GoodsSearch.js";
 
 const history = createHistory();
 
-// const endpoint = "http://shop-roles.node.ed.asmer.org.ua/";
-
-// const PageMain = () => {
-//   return (
-//     <div>
-//       {categories.map((category) => (
-//         <PageGood good={category} />
-//       ))}
-//     </div>
-//   );
-// };
+console.log(api);
+const { useGetRootCatsQuery } = api;
 
 // const CartIcon = () => (
 //   <svg
@@ -232,10 +226,14 @@ const history = createHistory();
 // );
 
 const Aside = () => {
-  return (
+  const { isLoading, data } = useGetRootCatsQuery();
+  console.log(isLoading, data);
+  return isLoading ? (
+    <h1>Loading...</h1>
+  ) : (
     <aside>
       <ul>
-        {categories.map((category) => (
+        {data.CategoryFind.map((category) => (
           <li key={category._id}>
             <Link to={`/category/${category._id}`}>{category.name}</Link>
           </li>
@@ -250,17 +248,28 @@ const RoutesList = () => (
   <Switch>
     <Route path="/" component={PageMain} exact />
     <Route path="/cart" component={Cart} />
-    <Route path="/history" component={History} />
+    <ProtectedRoute
+      path="/history"
+      user={["user"]}
+      fallback={"/login"}
+      component={History}
+    />
     <Route path="/login" component={Login} />
     <Route path="/register" component={Register} />
-    <Route path="/category/:id" component={PageCategory} />
-    <Route path="/good/:id" component={PageGood} />
-    <Route path="/admin" component={ResponsiveDrawer} />
-
+    <Route path="/category/:_id" component={PageCategory} />
+    <Route path="/good/:_id" component={PageGood} />
+    <Route path="/goods/:search" component={GoodsSearch} />
+    <ProtectedRoute
+      path="/admin"
+      user={["admin"]}
+      fallback={"/"}
+      component={AdminPage}
+    />
     <Route path="*" component={Page404} />
   </Switch>
 );
-
+console.log(api);
+store.subscribe(() => console.log(store.getState()));
 function App() {
   return (
     <div className="App">

@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState } from "react";
 import PropTypes from "prop-types";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -6,23 +7,70 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
+
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
+
 import ListItemText from "@mui/material/ListItemText";
-import MailIcon from "@mui/icons-material/Mail";
+
 import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { Link, Switch, Route, useParams } from "react-router-dom";
 import { Order } from "./Order";
 import { Orders } from "./Orders";
+import { AdminGoods } from "./AdminGoods";
+import { OneGoodAdminPage } from "./OneGoodAdminPage";
+import SearchIcon from "@mui/icons-material/Search";
+import InputBase from "@mui/material/InputBase";
+import { styled, alpha } from "@mui/material/styles";
 
-const drawerWidth = "18vw";
+const drawerWidth = "20vw";
 
-export const ResponsiveDrawer = (props) => {
+const Search = styled("div")(({ theme }) => ({
+  position: "relative",
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  "&:hover": {
+    backgroundColor: alpha(theme.palette.common.white, 0.25),
+  },
+  marginLeft: 0,
+  marginRight: "5%",
+  width: "100%",
+  [theme.breakpoints.up("sm")]: {
+    marginLeft: theme.spacing(1),
+    width: "auto",
+  },
+}));
+
+const SearchIconWrapper = styled("div")(({ theme }) => ({
+  padding: theme.spacing(0, 2),
+  height: "100%",
+  position: "absolute",
+  pointerEvents: "none",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+}));
+
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
+  color: "inherit",
+  width: "100%",
+  "& .MuiInputBase-input": {
+    padding: theme.spacing(1, 1, 1, 0),
+    // vertical padding + font size from searchIcon
+    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    transition: theme.transitions.create("width"),
+    [theme.breakpoints.up("sm")]: {
+      width: "12ch",
+      "&:focus": {
+        width: "20ch",
+      },
+    },
+  },
+}));
+export const AdminPage = (props) => {
   const { _id } = useParams();
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -43,29 +91,62 @@ export const ResponsiveDrawer = (props) => {
     }
   };
 
-  const drawer = (
-    <div>
-      <Toolbar />
-      <Divider />
-      <List>
-        {[
-          { title: "Усі замовлення", url: "/orders" },
-          //   { title: "Замовлення", url: `/order/:${_id}` },
-          { title: "Усі товари", url: "/goods" },
-          { title: "Головна", url: "/" },
-        ].map((text, index) => (
-          <ListItem key={text.title} disablePadding>
-            <ListItemButton
-              component={Link}
-              to={text.title === "Головна" ? text.url : "/admin" + text.url}
-            >
-              <ListItemText primary={text.title} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <List>
+  const DrawerAside = () => {
+    const [inputSearch, setInputSearch] = useState("");
+    const handleChangeInputSearch = (e) => {
+      setInputSearch(e.target.value);
+    };
+    const search = (value) => {
+      let mode = value.split(/\s+/).join("|");
+      return mode;
+    };
+    return (
+      <div>
+        <Toolbar />
+        <Divider />
+        <List>
+          {[
+            { title: "Усі замовлення", url: "/orders" },
+
+            { title: "Усі товари", url: "/goods" },
+            { title: "Головна", url: "/" },
+          ].map((text, index) => (
+            <ListItem key={text.title} disablePadding>
+              <ListItemButton
+                component={Link}
+                to={text.title === "Головна" ? text.url : "/admin" + text.url}
+              >
+                <ListItemText primary={text.title} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+        <Divider />
+        {/* <Typography component={Link} to={`/goods/${search(inputSearch)}`}>
+          <SearchIcon />
+        </Typography> */}
+
+        <Search
+          sx={{
+            display: "flex",
+
+            border: "1px solid #42a5f5",
+          }}
+        >
+          <Typography component={Link} to={`/goods/${search(inputSearch)}`}>
+            <SearchIcon />
+          </Typography>
+
+          <StyledInputBase
+            placeholder="Пошук..."
+            inputProps={{
+              "aria-label": "search",
+            }}
+            value={inputSearch}
+            onChange={handleChangeInputSearch}
+          />
+        </Search>
+        {/* <List>
         {["All mail", "Trash", "Spam"].map((text, index) => (
           <ListItem key={text} disablePadding>
             <ListItemButton>
@@ -76,9 +157,10 @@ export const ResponsiveDrawer = (props) => {
             </ListItemButton>
           </ListItem>
         ))}
-      </List>
-    </div>
-  );
+      </List> */}
+      </div>
+    );
+  };
 
   const container =
     window !== undefined ? () => window().document.body : undefined;
@@ -132,7 +214,7 @@ export const ResponsiveDrawer = (props) => {
             },
           }}
         >
-          {drawer}
+          <DrawerAside />
         </Drawer>
         <Drawer
           variant="permanent"
@@ -145,7 +227,7 @@ export const ResponsiveDrawer = (props) => {
           }}
           open
         >
-          {drawer}
+          <DrawerAside />
         </Drawer>
       </Box>
       <Box
@@ -157,9 +239,11 @@ export const ResponsiveDrawer = (props) => {
         }}
       >
         <Toolbar />
-        <Route path="/admin/orders/:search" component={Orders} />
+
+        <Route path="/admin/goods" component={AdminGoods} />
+        <Route path="/admin/good/:_id" component={OneGoodAdminPage} />
         <Route path="/admin/orders" component={Orders} />
-        <Route exact path="/admin/order/:id" component={Order} />
+        <Route exact path="/admin/order/:_id" component={Order} />
       </Box>
     </Box>
   );

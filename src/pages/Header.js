@@ -12,8 +12,20 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
+import SearchIcon from "@mui/icons-material/Search";
+import InputBase from "@mui/material/InputBase";
+import { styled, alpha } from "@mui/material/styles";
 import { Link } from "react-router-dom";
 import createHistory from "history/createBrowserHistory";
+import {
+  selectAuthAcl,
+  selectAuthToken,
+  selectCart,
+} from "../APIpages/selectors";
+import { useDispatch, useSelector } from "react-redux";
+import { authSlice, store } from "../APIpages/api";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { useState } from "react";
 
 const history = createHistory();
 
@@ -21,11 +33,66 @@ const pages = [
   { title: "Головна", url: "/" },
   { title: "Кошик", url: "/cart" },
 ];
-const settings = [{ title: "Dashboard", url: "/history" }, { title: "Logout" }];
+const settings = [
+  { title: "Особистий кабінет", url: "/history" },
+  { title: "Dashboard(for admin only)", url: "/admin" },
+  { title: "Logout" },
+];
 
-function ResponsiveAppBar() {
+const Search = styled("div")(({ theme }) => ({
+  position: "relative",
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  "&:hover": {
+    backgroundColor: alpha(theme.palette.common.white, 0.25),
+  },
+  marginLeft: 0,
+  marginRight: "5%",
+  width: "100%",
+  [theme.breakpoints.up("sm")]: {
+    marginLeft: theme.spacing(1),
+    width: "auto",
+  },
+}));
+
+const SearchIconWrapper = styled("div")(({ theme }) => ({
+  padding: theme.spacing(0, 2),
+  height: "100%",
+  position: "absolute",
+  pointerEvents: "none",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+}));
+
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
+  color: "inherit",
+  width: "100%",
+  "& .MuiInputBase-input": {
+    padding: theme.spacing(1, 1, 1, 0),
+    // vertical padding + font size from searchIcon
+    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    transition: theme.transitions.create("width"),
+    [theme.breakpoints.up("sm")]: {
+      width: "12ch",
+      "&:focus": {
+        width: "20ch",
+      },
+    },
+  },
+}));
+
+function Header() {
+  const cart = useSelector(selectCart);
+  const total = Object.values(cart).reduce((acc, { count }) => acc + count, 0);
+  const history = useHistory();
+  const token = useSelector(selectAuthToken);
+
+  const dispatch = useDispatch();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+
+  const [inputSearch, setInputSearch] = useState("");
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -42,6 +109,13 @@ function ResponsiveAppBar() {
     setAnchorElUser(null);
   };
 
+  const handleChangeInputSearch = (e) => {
+    setInputSearch(e.target.value);
+  };
+  const search = (value) => {
+    let mode = value.split(/\s+/).join("|");
+    return mode;
+  };
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
@@ -129,30 +203,60 @@ function ResponsiveAppBar() {
                 key={page.title}
                 sx={{ my: 2, color: "white", display: "block" }}
               >
-                {page.title}
+                {page.title === "Кошик"
+                  ? page.title + `(${total})`
+                  : page.title}
               </Button>
             ))}
           </Box>
-          {/* !store.getState().auth.token ? ( */}
-          <Link to="/login">
-            <Typography
-              textAlign="center"
-              sx={{
-                fontSize: "calc(16px+vmin)",
-                fontFamily: "monospace",
-                fontWeight: 700,
-                letterSpacing: ".3rem",
-                color: "white",
-                textDecoration: "none",
+          <Typography component={Link} to={`/goods/${search(inputSearch)}`}>
+            <SearchIcon />
+          </Typography>
+          <Search>
+            <SearchIconWrapper></SearchIconWrapper>
+
+            <StyledInputBase
+              placeholder="Пошук...…"
+              inputProps={{
+                "aria-label": "search",
               }}
-            >
-              LOGIN
-            </Typography>
-          </Link>
-          {/* ) : (
+              value={inputSearch}
+              onChange={handleChangeInputSearch}
+            />
+          </Search>
+          {!token ? (
+            <Link to="/login">
+              <Typography
+                textAlign="center"
+                sx={{
+                  fontSize: "calc(16px+vmin)",
+                  fontFamily: "monospace",
+                  fontWeight: 700,
+                  letterSpacing: ".3rem",
+                  color: "white",
+                  textDecoration: "none",
+                }}
+              >
+                LOGIN
+              </Typography>
+            </Link>
+          ) : (
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Typography
+                    textAlign="center"
+                    sx={{
+                      fontSize: "calc(16px+vmin)",
+                      fontFamily: "monospace",
+                      fontWeight: 700,
+                      letterSpacing: ".3rem",
+                      color: "white",
+                      textDecoration: "none",
+                    }}
+                  >
+                    {store.getState().auth.payload.sub.login}
+                  </Typography>
                   <Avatar sx={{ m: 1, color: "white" }}></Avatar>
                 </IconButton>
               </Tooltip>
@@ -175,13 +279,19 @@ function ResponsiveAppBar() {
                 {settings.map(({ title, url }) => {
                   if (title === "Logout") {
                     return (
-                      <MenuItem key={title} onClick={() => alert("Logout")}>
+                      <MenuItem
+                        key={title}
+                        onClick={() => {
+                          dispatch(authSlice.actions.logout());
+                          history.push("/");
+                        }}
+                      >
                         <Typography textAlign="center">{title}</Typography>
                       </MenuItem>
                     );
                   }
                   return (
-                    <MenuItem key={title} onClick={() => history.push(url)}>
+                    <MenuItem key={title}>
                       <Link to={url}>
                         <Typography textAlign="center">{title}</Typography>
                       </Link>
@@ -190,92 +300,11 @@ function ResponsiveAppBar() {
                 })}
               </Menu>
             </Box>
-          ) */}
+          )}
         </Toolbar>
       </Container>
     </AppBar>
   );
 }
-// function ResponsiveAppBar() {
-//   const [anchorElNav, setAnchorElNav] = React.useState(null);
-//   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
-//   const handleOpenNavMenu = (event) => {
-//     setAnchorElNav(event.currentTarget);
-//   };
-//   const handleOpenUserMenu = (event) => {
-//     setAnchorElUser(event.currentTarget);
-//   };
-
-//   const handleCloseNavMenu = () => {
-//     setAnchorElNav(null);
-//   };
-
-//   const handleCloseUserMenu = () => {
-//     setAnchorElUser(null);
-//   };
-
-//   return (
-//     <AppBar position="static">
-//       <Container maxWidth="xl">
-//         <Toolbar disableGutters>
-//           <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
-//           <Typography
-//             variant="h6"
-//             noWrap
-//             component="a"
-//             href="#app-bar-with-responsive-menu"
-//             sx={{
-//               mr: 2,
-//               display: { xs: "none", md: "flex" },
-//               fontFamily: "monospace",
-//               fontWeight: 700,
-//               letterSpacing: ".3rem",
-//               color: "inherit",
-//               textDecoration: "none",
-//             }}
-//           >
-//             LOGO
-//           </Typography>
-
-//           <Typography
-//             variant="h6"
-//             noWrap
-//             component="a"
-//             href="#app-bar-with-responsive-menu"
-//             sx={{
-//               mr: 2,
-//               display: { xs: "none", md: "flex" },
-//               fontFamily: "monospace",
-//               fontWeight: 700,
-//               letterSpacing: ".3rem",
-//               color: "inherit",
-//               textDecoration: "none",
-//             }}
-//           >
-//             Main
-//           </Typography>
-//           <Typography
-//             variant="h6"
-//             noWrap
-//             component="a"
-//             href="#app-bar-with-responsive-menu"
-//             sx={{
-//               mr: 2,
-//               display: { xs: "none", md: "flex" },
-//               fontFamily: "monospace",
-//               fontWeight: 700,
-//               letterSpacing: ".3rem",
-//               color: "inherit",
-//               textDecoration: "none",
-//             }}
-//           >
-//             <Link to="/cart"> Cart</Link>
-//           </Typography>
-//         </Toolbar>
-//       </Container>
-//     </AppBar>
-//   );
-// }
-
-export default ResponsiveAppBar;
+export default Header;

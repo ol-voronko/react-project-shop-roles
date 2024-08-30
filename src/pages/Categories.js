@@ -1,4 +1,4 @@
-import { categories } from "../data";
+// import { categories } from "../data";
 import * as React from "react";
 import { Link } from "react-router-dom";
 import Card from "@mui/material/Card";
@@ -7,7 +7,9 @@ import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { Button, CardActionArea, CardActions } from "@mui/material";
 import defaultImage from "../images/box.jpg";
+import { api } from "../APIpages/api";
 
+const { useGetRootCatsQuery } = api;
 export const endpoint = "http://shop-roles.node.ed.asmer.org.ua/";
 
 export const CardCategory = ({ good }) => {
@@ -33,9 +35,9 @@ export const CardCategory = ({ good }) => {
           <Typography gutterBottom variant="h5" component="div">
             <Link to={`/category/${good._id}`}>{good.name}</Link>
           </Typography>
-          <Typography variant="body2" color="text.secondary">
+          {/* <Typography variant="body2" color="text.secondary">
             {good.description}
-          </Typography>
+          </Typography> */}
         </CardContent>
 
         {/* <CardActions>
@@ -49,10 +51,19 @@ export const CardCategory = ({ good }) => {
 };
 
 export const PageMain = () => {
+  const { isLoading, data } = useGetRootCatsQuery();
+
+  if (isLoading) {
+    return (
+      <>
+        <h1>Loading...</h1>
+      </>
+    );
+  }
   return (
     <div className="category-all">
-      {categories.map((category) => (
-        <CardCategory good={category} />
+      {data.CategoryFind.map((category) => (
+        <CardCategory key={category._id} good={category} />
       ))}
     </div>
   );

@@ -1,7 +1,11 @@
 import { Link } from "react-router-dom";
 import { Button, Card, Typography } from "@mui/material";
-import { orders } from "../data";
+// import { orders } from "../data";
 import shadows from "@mui/material/styles/shadows";
+import { api } from "../APIpages/api";
+import { useEffect } from "react";
+
+const { useGetAllOrdersQuery } = api;
 
 const Order = ({ order }) => {
   const { owner, total, createdAt, _id } = order;
@@ -35,7 +39,7 @@ const Order = ({ order }) => {
           <Typography variant="h6" color="text.secondary">
             Загальна сума : {total} грн
           </Typography>
-          <Button component={Link} to={`/admin/order/${_id}`} sx={{}}>
+          <Button component={Link} to={`/admin/order/${_id}`}>
             Детальніше
           </Button>
         </div>
@@ -44,10 +48,15 @@ const Order = ({ order }) => {
   );
 };
 export const Orders = () => {
+  const { isLoading, data } = useGetAllOrdersQuery();
+
+  if (isLoading) {
+    return <h2>isLoading</h2>;
+  }
   return (
     <div className="orders-admin">
-      {orders.map((el) => (
-        <Order order={el} />
+      {data.OrderFind.map((order) => (
+        <Order key={order._id} order={order} />
       ))}
     </div>
   );

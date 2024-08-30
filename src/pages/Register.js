@@ -6,12 +6,39 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import { Button } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import Box from "@mui/material/Box";
 import { Copyright } from "./Login";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { actionFullRegister } from "../Thunks/actionFullRegister";
+import { selectAuthError, selectAuthToken } from "../APIpages/selectors";
+import { authSlice } from "../APIpages/api";
+
 const defaultTheme = createTheme();
 
 export const Register = () => {
+  const token = useSelector(selectAuthToken);
+  const error = useSelector(selectAuthError);
+
+  const [login, setLogin] = useState("");
+  const [password, setPassword] = useState("");
+  const [nick, setNick] = useState("");
+
+  const dispatch = useDispatch();
+  const history = useHistory();
+
+  useEffect(() => {
+    return () => {
+      dispatch(authSlice.actions.setAuthError(null));
+    };
+  }, []);
+
+  useEffect(() => {
+    if (token) {
+      history.push("/");
+    }
+  }, [token]);
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
@@ -24,9 +51,7 @@ export const Register = () => {
             alignItems: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            {/* <LockOutlinedIcon /> */}
-          </Avatar>
+          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}></Avatar>
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
@@ -40,24 +65,17 @@ export const Register = () => {
               <Grid item xs={12} sm={6}>
                 <TextField
                   autoComplete="given-name"
-                  name="firstName"
+                  name="nick"
                   required
                   fullWidth
-                  id="firstName"
-                  label="First Name"
+                  id="nick"
+                  label="Nick"
                   autoFocus
+                  value={nick}
+                  onChange={(e) => setNick(e.target.value)}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  autoComplete="family-name"
-                />
-              </Grid>
+
               <Grid item xs={12}>
                 <TextField
                   required
@@ -66,6 +84,8 @@ export const Register = () => {
                   label="Login"
                   name="login"
                   autoComplete="login"
+                  value={login}
+                  onChange={(e) => setLogin(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -77,22 +97,19 @@ export const Register = () => {
                   type="password"
                   id="password"
                   autoComplete="new-password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
               </Grid>
-              {/* <Grid item xs={12}>
-                <FormControlLabel
-                  control={
-                    <Checkbox value="allowExtraEmails" color="primary" />
-                  }
-                  label="I want to receive inspiration, marketing promotions and updates via email."
-                />
-              </Grid> */}
             </Grid>
+            {error && <p className="text-error">{error}</p>}
             <Button
-              type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              onClick={(e) =>
+                dispatch(actionFullRegister(login, password, nick))
+              }
             >
               Sign Up
             </Button>

@@ -1,10 +1,26 @@
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Button, Card, Typography } from "@mui/material";
-import { order } from "../data";
 
-export const Order = ({}) => {
-  const { owner, total, createdAt, _id, orderGoods } = order;
+import { api } from "../APIpages/api";
 
+const { useGetOrderByIdQuery } = api;
+
+export const Order = () => {
+  const { _id } = useParams();
+  const { isLoading, data } = useGetOrderByIdQuery({ _id });
+  console.log(data);
+  console.log(isLoading, data, _id);
+  if (isLoading) {
+    return <h3>Loading...wait a little...</h3>;
+  }
+  const {
+    OrderFindOne: {
+      owner: { login },
+      total,
+      createdAt,
+      orderGoods,
+    },
+  } = data;
   return (
     <div
       div
@@ -44,7 +60,7 @@ export const Order = ({}) => {
           color="text.secondary"
           sx={{ alignSelf: "center", color: "primary.dark" }}
         >
-          Замовник: {owner.login}
+          Замовник: {login}
         </Typography>
         <table>
           <tr>
@@ -95,10 +111,10 @@ export const Order = ({}) => {
         {/* <CardActions sx={{ display: "flex", justifyContent: "flex-end" }}> */}
         <Button
           component={Link}
-          to={`/admin/order/:${_id}`}
+          to={`/admin/orders`}
           sx={{ alignSelf: "flex-end", fontSize: "1.2rem", fontWeight: "700" }}
         >
-          Щось зробити
+          Назад
         </Button>
       </Card>
     </div>

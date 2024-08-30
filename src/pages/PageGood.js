@@ -1,14 +1,30 @@
-import { good } from "../data";
+// import { good } from "../data";
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 import { endpoint } from "./Categories";
 import { Button, CardActions } from "@mui/material";
 import Card from "@mui/material/Card";
 import Typography from "@mui/material/Typography";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
+import { api } from "../APIpages/api";
+import { cartAdd } from "../APIpages/cartReducer";
+import { useDispatch } from "react-redux";
+
+const { useGetGoodByIdQuery } = api;
 
 export const PageGood = () => {
-  const { name, description, images, price } = good;
+  const dispatch = useDispatch();
+
+  const { _id } = useParams();
+  const { isLoading, data } = useGetGoodByIdQuery({ _id });
+  console.log(isLoading, data, _id);
+  if (isLoading) {
+    return <h3>Loading...</h3>;
+  }
+  const {
+    GoodFindOne: { name, description, images, price },
+  } = data;
 
   const Carousel = () => {
     const [current, setCurrent] = useState(0);
@@ -17,7 +33,11 @@ export const PageGood = () => {
       <div>
         <img
           src={endpoint + images[current].url}
-          style={{ width: "50%", aspectRatio: "1.2", position: "relative" }}
+          style={{
+            width: "50%",
+            aspectRatio: "0.8",
+            position: "relative",
+          }}
           alt={name}
           onClick={(e) => {
             const { layerX } = e.nativeEvent;
@@ -84,7 +104,7 @@ export const PageGood = () => {
             flexDirection: "column",
             gap: "5vh",
             justifyContent: "space-between",
-            height: "50%",
+            // height: "50%",
             marginTop: "5vh",
           }}
           // height="50vh"
@@ -122,6 +142,7 @@ export const PageGood = () => {
             color="primary"
             variant="outlined"
             sx={{ marginRight: "5vw", fontSize: "1.2rem", fontWeight: "700" }}
+            onClick={() => dispatch(cartAdd(data.GoodFindOne))}
           >
             У кошик
           </Button>

@@ -1,14 +1,21 @@
-import { category } from "../data";
+// import { category } from "../data";
 import { endpoint } from "./Categories";
 import * as React from "react";
+import { useParams } from "react-router-dom";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { Button, CardActionArea, CardActions } from "@mui/material";
 import { Link } from "react-router-dom";
+import { api } from "../APIpages/api.js";
+import { useDispatch } from "react-redux";
+import { cartAdd } from "../APIpages/cartReducer.js";
 
-const MultiActionAreaCard = ({ good }) => {
+const { useGetCategoryByIdQuery } = api;
+
+export const CardGood = ({ good }) => {
+  const dispatch = useDispatch();
   const { name, images, price, _id } = good;
   return (
     <Card
@@ -43,6 +50,7 @@ const MultiActionAreaCard = ({ good }) => {
           size="small"
           color="primary"
           sx={{ marginRight: "5vw", fontSize: "1rem", fontWeight: "500" }}
+          onClick={() => dispatch(cartAdd(good))}
         >
           У кошик
         </Button>
@@ -52,14 +60,43 @@ const MultiActionAreaCard = ({ good }) => {
 };
 
 export const PageCategory = () => {
+  const { _id } = useParams();
+  const { isLoading, data } = useGetCategoryByIdQuery({ _id });
+  console.log(isLoading, data);
+
+  if (isLoading) {
+    return (
+      <>
+        {" "}
+        <h1>Loading...</h1>
+      </>
+    );
+  }
+  const {
+    CategoryFindOne: { name, goods, subCategories },
+  } = data;
+
   return (
     <div>
-      <h1>{category.name}</h1>
-      <span>{category.subCategories}</span>
+      <h1>{name}</h1>
+      <ul>
+        {Array.isArray(subCategories) &&
+          subCategories.map((el) => (
+            <Link to={`/category/${el._id}`}> {el.name}</Link>
+          ))}
+      </ul>
       <div className="category-all">
-        {category.goods.map((good) => (
-          <MultiActionAreaCard good={good} />
-        ))}
+        {Array.isArray(goods) && goods.length !== 0 ? (
+          goods.map((good) =>
+            good.price !== null && Array.isArray(good.images) ? (
+              <CardGood good={good} />
+            ) : (
+              <p>Тут поки що пусто,але ми скоро це виправимо</p>
+            )
+          )
+        ) : (
+          <p>В цій категорії товарів поки що немає,але ми працюємо над цим</p>
+        )}
       </div>
     </div>
   );

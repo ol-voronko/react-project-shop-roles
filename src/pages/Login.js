@@ -1,14 +1,21 @@
 import Avatar from "@mui/material/Avatar";
 // import LockOutlinedIcon from
-import TextField from "@mui/material/TextField";
-import CssBaseline from "@mui/material/CssBaseline";
-import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Typography from "@mui/material/Typography";
-import Grid from "@mui/material/Grid";
 import { Button } from "@mui/material";
-import { Link } from "react-router-dom";
 import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import CssBaseline from "@mui/material/CssBaseline";
+import Grid from "@mui/material/Grid";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { api, authSlice, store } from "../APIpages/api";
+import { selectAuthError, selectAuthToken } from "../APIpages/selectors";
+import { actionFullLogin } from "../Thunks/actionFullLogin";
 
 const defaultTheme = createTheme();
 export function Copyright(props) {
@@ -29,7 +36,29 @@ export function Copyright(props) {
   );
 }
 
+const { useLoginMutation } = api;
+
 export const Login = () => {
+  const token = useSelector(selectAuthToken);
+  const error = useSelector(selectAuthError);
+
+  const dispatch = useDispatch();
+  const [login, setLogin] = useState("");
+  const [password, setPassword] = useState("");
+  const history = useHistory();
+
+  useEffect(() => {
+    return () => {
+      dispatch(authSlice.actions.setAuthError(null));
+    };
+  }, []);
+  useEffect(() => {
+    if (token) {
+      history.push("/");
+    }
+  }, [token]);
+
+  const [loginQuery, { isLoading, data }] = useLoginMutation();
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
@@ -61,6 +90,8 @@ export const Login = () => {
               name="login"
               autoComplete="login"
               autoFocus
+              value={login}
+              onChange={(e) => setLogin(e.target.value)}
             />
             <TextField
               margin="normal"
@@ -71,16 +102,17 @@ export const Login = () => {
               type="password"
               id="password"
               autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
-            {/* <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            /> */}
+            {error && <p className="text-error">{error}</p>}
             <Button
-              type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              onClick={() => {
+                dispatch(actionFullLogin(login, password));
+              }}
             >
               Sign In
             </Button>
