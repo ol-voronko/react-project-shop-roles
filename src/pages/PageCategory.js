@@ -1,4 +1,3 @@
-// import { category } from "../data";
 import { endpoint } from "./Categories";
 import * as React from "react";
 import { useParams } from "react-router-dom";
@@ -10,7 +9,7 @@ import { Button, CardActionArea, CardActions } from "@mui/material";
 import { Link } from "react-router-dom";
 import { api } from "../APIpages/api.js";
 import { useDispatch } from "react-redux";
-import { cartAdd } from "../APIpages/cartReducer.js";
+import { cartAdd } from "../APIpages/reducers/cartReducer.js";
 
 const { useGetCategoryByIdQuery } = api;
 

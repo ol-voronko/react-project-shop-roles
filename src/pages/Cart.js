@@ -15,7 +15,7 @@ import {
   cartSub,
   cartDelete,
   cartClear,
-} from "../APIpages/cartReducer";
+} from "../APIpages/reducers/cartReducer";
 import { actionFullOrder } from "../Thunks/actionFullOrder";
 
 const CartIcon = () => (

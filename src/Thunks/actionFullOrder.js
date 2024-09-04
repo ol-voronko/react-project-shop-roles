@@ -1,6 +1,6 @@
 import { api } from "../APIpages/api";
-import { cartSlice } from "../APIpages/cartReducer";
-import { cartClear } from "../APIpages/cartReducer";
+import { cartSlice } from "../APIpages/reducers/cartReducer";
+import { cartClear } from "../APIpages/reducers/cartReducer";
 import { useSelector } from "react-redux";
 import { selectCart } from "../APIpages/selectors";
 

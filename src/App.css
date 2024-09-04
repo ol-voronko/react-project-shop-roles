@@ -8,6 +8,18 @@
   max-width: 100vw;
   overflow-x: hidden;
 }
+.treeRoot {
+  height: 100%;
+}
+
+.draggingSource {
+  opacity: 0.3;
+}
+
+.dropTarget {
+  background-color: #e8f0fe;
+}
+
 header {
   display: flex;
   justify-content: space-around;
@@ -36,6 +48,28 @@ aside {
 ul li {
   list-style-type: none;
   text-align: start;
+}
+.category-tree {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+ul {
+  list-style-type: none;
+  padding-left: 20px;
+  text-align: start;
+}
+
+li {
+  list-style: none;
+  /* margin: 5px 0; */
+  cursor: pointer;
+}
+.category-name {
+  text-align: start;
+}
+.sub-category-list {
+  margin-left: 2%;
 }
 a {
   text-decoration: none;

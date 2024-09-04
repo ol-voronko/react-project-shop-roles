@@ -1,4 +1,3 @@
-// import { good } from "../data";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { endpoint } from "./Categories";
@@ -8,10 +7,71 @@ import Typography from "@mui/material/Typography";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import { api } from "../APIpages/api";
-import { cartAdd } from "../APIpages/cartReducer";
+import { cartAdd } from "../APIpages/reducers/cartReducer";
 import { useDispatch } from "react-redux";
 
 const { useGetGoodByIdQuery } = api;
+export const Carousel = ({ images }) => {
+  const [current, setCurrent] = useState(0);
+
+  return (
+    <div>
+      <img
+        src={endpoint + images[current].url}
+        style={{
+          width: "50%",
+          aspectRatio: "0.8",
+          position: "relative",
+        }}
+        alt="Some good"
+        onClick={(e) => {
+          const { layerX } = e.nativeEvent;
+          const { clientWidth } = e.target;
+
+          layerX < clientWidth / 3
+            ? setCurrent((current) =>
+                current === 0 ? (current = images.length - 1) : +current - 1
+              )
+            : setCurrent((current) =>
+                current === images.length - 1 ? (current = 0) : +current + 1
+              );
+        }}
+      />
+      <Thumbnails
+        images={images}
+        current={current}
+        onChange={(index) => setCurrent(index)}
+      />
+    </div>
+  );
+};
+export const Thumbnails = ({ images, current, onChange }) => {
+  return (
+    <div className="thumbnails">
+      {images.map((image, index) => (
+        <img
+          src={endpoint + image.url}
+          alt="beauty of nature"
+          onClick={() => onChange(index)}
+          style={
+            index === current
+              ? {
+                  border: " 5px, solid ,black",
+                  padding: "2px",
+                  width: "2vw",
+                }
+              : {
+                  border: " none",
+                  width: "100px",
+                  boxSizing: "border-box",
+                  width: "2vw",
+                }
+          }
+        />
+      ))}
+    </div>
+  );
+};
 
 export const PageGood = () => {
   const dispatch = useDispatch();
@@ -25,69 +85,6 @@ export const PageGood = () => {
   const {
     GoodFindOne: { name, description, images, price },
   } = data;
-
-  const Carousel = () => {
-    const [current, setCurrent] = useState(0);
-
-    return (
-      <div>
-        <img
-          src={endpoint + images[current].url}
-          style={{
-            width: "50%",
-            aspectRatio: "0.8",
-            position: "relative",
-          }}
-          alt={name}
-          onClick={(e) => {
-            const { layerX } = e.nativeEvent;
-            const { clientWidth } = e.target;
-
-            layerX < clientWidth / 3
-              ? setCurrent((current) =>
-                  current === 0 ? (current = images.length - 1) : +current - 1
-                )
-              : setCurrent((current) =>
-                  current === images.length - 1 ? (current = 0) : +current + 1
-                );
-          }}
-        />
-        <Thumbnails
-          images={images}
-          current={current}
-          onChange={(index) => setCurrent(index)}
-        />
-      </div>
-    );
-  };
-
-  const Thumbnails = ({ images, current, onChange }) => {
-    return (
-      <div className="thumbnails">
-        {images.map((image, index) => (
-          <img
-            src={endpoint + image.url}
-            alt="beauty of nature"
-            onClick={() => onChange(index)}
-            style={
-              index === current
-                ? {
-                    border: " 5px, solid ,black",
-                    padding: "2px",
-                    width: "2vw",
-                  }
-                : {
-                    border: " none",
-                    width: "100px",
-                    boxSizing: "border-box",
-                    width: "2vw",
-                  }
-            }
-          />
-        ))}
-      </div>
-    );
-  };
 
   return (
     <div className="category-all">
@@ -107,10 +104,6 @@ export const PageGood = () => {
             // height: "50%",
             marginTop: "5vh",
           }}
-          // height="50vh"
-          // image={endpoint + images[0].url}
-          // // image={good.images[0].url}
-          // alt="green iguana"
         >
           <Carousel images={images} />
         </CardMedia>

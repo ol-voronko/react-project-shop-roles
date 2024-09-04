@@ -6,11 +6,13 @@ import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import TextField from "@mui/material/TextField";
 import { IconButton } from "@mui/material";
-import { endpoint } from "./Categories";
+import { BACKEND_HOSTNAME } from "../APIpages/api";
 import ModeIcon from "@mui/icons-material/Mode";
 import CloseIcon from "@mui/icons-material/Close";
+import { Carousel } from "./PageGood";
 
 import { useState } from "react";
+import { EditGoodAdmin } from "./EditGoodAdmin";
 
 const { useGetGoodByIdQuery } = api;
 
@@ -29,6 +31,8 @@ export const OneGoodAdminPage = () => {
 
   return (
     <div className="category-all">
+      {isRedact && <EditGoodAdmin />}
+
       <Card
         sx={{
           width: "50vw",
@@ -39,7 +43,6 @@ export const OneGoodAdminPage = () => {
       >
         <div className="admin-btns">
           <IconButton
-            component={Link}
             aria-label="delete"
             size="large"
             onClick={() => setIsRedact((isRedact) => !isRedact)}
@@ -57,22 +60,17 @@ export const OneGoodAdminPage = () => {
           </IconButton>
         </div>
         <CardMedia
-          component="img"
-          //   sx={{
-          //     // display: "flex",
-          //     // flexDirection: "column",
-          //     gap: "5vh",
-          //     justifyContent: "space-between",
-          //     // height: "50%",
-          //     marginTop: "5vh",
-          //   }}
-          height="200"
-          image={endpoint + images[0].url}
-          width="100"
-          //   // image={good.images[0].url}
-          alt="green iguana"
+          component="div"
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "5vh",
+            justifyContent: "space-between",
+            // height: "50%",
+            marginTop: "5vh",
+          }}
         >
-          {/* <Carousel images={images} /> */}
+          <Carousel images={images} />
         </CardMedia>
         <CardContent sx={{ marginTop: "5vh" }}>
           <Typography

@@ -1,9 +1,18 @@
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { Button, Card, Typography } from "@mui/material";
 // import { orders } from "../data";
 import shadows from "@mui/material/styles/shadows";
 import { api } from "../APIpages/api";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import {
+  selectAllFeeds,
+  selectFeedCount,
+  selectFeedIsLoading,
+} from "../APIpages/selectors";
+import { useDispatch } from "react-redux";
+import { actionGetMoreOrders } from "../Thunks/actionGetMoreOrders";
+import { Height } from "@mui/icons-material";
 
 const { useGetAllOrdersQuery } = api;
 
@@ -48,16 +57,39 @@ const Order = ({ order }) => {
   );
 };
 export const Orders = () => {
-  const { isLoading, data } = useGetAllOrdersQuery();
+  const dispatch = useDispatch();
+  const feedCount = useSelector(selectFeedCount);
+  const feeds = useSelector(selectAllFeeds);
+  const feedisLoading = useSelector(selectFeedIsLoading);
+  // const { isLoading, data } = useGetAllOrdersQuery(feedCount);
+  const divRef = useRef();
 
-  if (isLoading) {
-    return <h2>isLoading</h2>;
-  }
+  const onScrollHandler = (ev) => {
+    const a = window.innerHeight + Math.round(window.scrollY);
+    // if (a >= document.body.offsetHeight) {
+    //   // if (!isLoading) {
+    //   dispatch(actionGetMoreOrders());
+    //   // }
+    //}
+    const divRefY = divRef.current.getBoundingClientRect().y;
+    if (divRefY <= window.innerHeight && !feedisLoading) {
+      dispatch(actionGetMoreOrders());
+    }
+  };
+  useEffect(() => {
+    window.addEventListener("scroll", onScrollHandler);
+    return () => {
+      window.removeEventListener("scroll", onScrollHandler);
+    };
+  }, []);
+
   return (
     <div className="orders-admin">
-      {data.OrderFind.map((order) => (
+      {feeds.map((order) => (
         <Order key={order._id} order={order} />
       ))}
+      {feedisLoading && <h4>Loading...wait...</h4>}
+      <div ref={divRef} style={{ height: "5px" }}></div>
     </div>
   );
 };

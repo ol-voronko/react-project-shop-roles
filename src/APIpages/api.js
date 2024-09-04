@@ -1,7 +1,7 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { graphqlRequestBaseQuery } from "@rtk-query/graphql-request-base-query";
 import { configureStore, createSlice } from "@reduxjs/toolkit";
-import { cartSlice } from "./cartReducer";
+import { cartSlice } from "./reducers/cartReducer";
 import storage from "redux-persist/lib/storage"; //рушій localStorage для персіста
 import {
   persistReducer,
@@ -13,10 +13,12 @@ import {
   PURGE,
   REGISTER,
 } from "redux-persist";
+import { feedSlice } from "./reducers/feedReducer";
 
+export const BACKEND_HOSTNAME = "shop-roles.node.ed.asmer.org.ua";
 export const api = createApi({
   baseQuery: graphqlRequestBaseQuery({
-    url: "http://shop-roles.node.ed.asmer.org.ua/graphql",
+    url: `http://${BACKEND_HOSTNAME}/graphql`,
     prepareHeaders(headers, { getState }) {
       const { token } = getState().auth; //отримуємо токен
       if (token) {
@@ -39,8 +41,7 @@ export const api = createApi({
     }),
     login: builder.mutation({
       query: ({ login, password }) => ({
-        document: `
-                    query login($login: String, $password: String) {
+        document: ` query login($login: String, $password: String) {
                         login(login: $login, password: $password) 
                     }
                     `,
@@ -74,12 +75,15 @@ export const api = createApi({
                             price
                             description
                             images{
-                            url
-    }
-  }
-}`,
+                            url _id
+                        }
+                      }
+                    }`,
         variables: { q: JSON.stringify([{ _id }]) },
       }),
+      providesTags: (result, error, { _id }) => {
+        return [{ type: "Good", id: _id }];
+      },
     }),
 
     getUserById: builder.query({
@@ -108,9 +112,9 @@ export const api = createApi({
       }),
     }),
     getAllOrders: builder.query({
-      query: () => ({
-        document: ` query allOrders{
-             OrderFind(query:"[{},{\\"sort\\":[{\\"_id\\":-1}]}]"){
+      query: (skip) => ({
+        document: ` query allOrders($query:String){
+             OrderFind(query:$query){
                       _id
                       createdAt
                       total
@@ -118,12 +122,18 @@ export const api = createApi({
                       
                         }
                       }`,
+        variables: {
+          query: JSON.stringify([
+            {},
+            { sort: [{ _id: -1 }], skip: [skip], limit: [100] },
+          ]),
+        },
       }),
     }),
     getOrderById: builder.query({
       query: ({ _id }) => ({
         document: ` query orderOne($query:String){
-                 OrderFindOne(query:$query) {()
+                 OrderFindOne(query:$query) {
                     _id
                     createdAt
                     owner{login}
@@ -183,6 +193,31 @@ export const api = createApi({
         },
       }),
     }),
+    upsertGood: builder.mutation({
+      query: ({ good }) => ({
+        document: `mutation upsertGood($good:GoodInput){
+              GoodUpsert(good:$good){
+                  _id
+              }
+          }`,
+
+        variables: {
+          good: { ...good, images: good.images.map(({ _id }) => ({ _id })) },
+        },
+      }),
+      invalidatesTags: (result, error, arg) => [
+        { type: "Good", id: arg.good._id },
+      ],
+    }),
+    getAllCats: builder.query({
+      query: () => ({
+        document: `query allCategories{
+              CategoryFind(query:"[{}]"){
+                  _id name  parent{_id}
+                  }
+                }`,
+      }),
+    }),
   }),
 });
 
@@ -191,8 +226,7 @@ const jwtDecode = (token) => {
     return JSON.parse(atob(token.split(".")[1]));
   } catch {}
 };
-// const token =
-//   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsiaWQiOiI2NmJjZGYzYjliNjA2ODJmMTNhNGZmOTMiLCJsb2dpbiI6InRzdDE5IiwiYWNsIjpbIjY2YmNkZjNiOWI2MDY4MmYxM2E0ZmY5MyIsInVzZXIiXX0sImlhdCI6MTcyMzY1Mzk3Nn0.c9yjdbDT-DOGHSxYNtu9lXr-Taa33FjOrONZIesKKpk";
+
 export const authSlice = createSlice({
   name: "auth",
   initialState: { token: null, payload: null, error: null },
@@ -223,6 +257,7 @@ export const store = configureStore({
       authSlice.reducer
     ),
     [cartSlice.name]: cartSlice.reducer,
+    [feedSlice.name]: feedSlice.reducer,
     [api.reducerPath]: api.reducer, //підключення слайса, створеннного createApi
   },
   middleware: (getDefaultMiddleware) => [

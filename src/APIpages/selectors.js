@@ -19,3 +19,11 @@ export const selectAuthError = (state) => {
 
 // селектор для cart
 export const selectCart = (state) => state.cartPage.cart;
+
+// селектор для скролу
+
+export const selectFeedCount = (state) => state.feed.feed.length;
+
+export const selectAllFeeds = (state) => state.feed.feed;
+
+export const selectFeedIsLoading = (state) => state.feed.isLoading;

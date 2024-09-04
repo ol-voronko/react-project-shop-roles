@@ -25,6 +25,7 @@ import { OneGoodAdminPage } from "./OneGoodAdminPage";
 import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
 import { styled, alpha } from "@mui/material/styles";
+import { CategoryTree } from "./categoryTree/CategoryTree.js";
 
 const drawerWidth = "20vw";
 
@@ -70,12 +71,19 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
   },
 }));
+
 export const AdminPage = (props) => {
-  const { _id } = useParams();
+  // const { _id } = useParams();
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [isClosing, setIsClosing] = React.useState(false);
 
+  const asideSettings = [
+    { title: "Усі замовлення", url: "/orders" },
+    { title: "Усі категорії", url: "/categories" },
+    { title: "Усі товари", url: "/goods" },
+    { title: "Головна", url: "/" },
+  ];
   const handleDrawerClose = () => {
     setIsClosing(true);
     setMobileOpen(false);
@@ -105,12 +113,7 @@ export const AdminPage = (props) => {
         <Toolbar />
         <Divider />
         <List>
-          {[
-            { title: "Усі замовлення", url: "/orders" },
-
-            { title: "Усі товари", url: "/goods" },
-            { title: "Головна", url: "/" },
-          ].map((text, index) => (
+          {asideSettings.map((text, index) => (
             <ListItem key={text.title} disablePadding>
               <ListItemButton
                 component={Link}
@@ -244,6 +247,7 @@ export const AdminPage = (props) => {
         <Route path="/admin/good/:_id" component={OneGoodAdminPage} />
         <Route path="/admin/orders" component={Orders} />
         <Route exact path="/admin/order/:_id" component={Order} />
+        <Route path="/admin/categories" component={CategoryTree} />
       </Box>
     </Box>
   );
