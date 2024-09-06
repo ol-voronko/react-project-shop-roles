@@ -60,44 +60,6 @@ export const CategoryTree = () => {
   }
 
   console.log(sampleData);
-  //   const categoryMap = new Map();
-  //   sampleData.forEach((category) => {
-  //     categoryMap.set(category._id, { ...category });
-  //   });
-
-  // Создаем массив для хранения корневых категорий и будущего отсортированного списка
-  //   const rootCategories = [];
-
-  //   // Разделяем категории на корневые и дочерние
-  //   sampleData.forEach((category) => {
-  //     if (category.parent === 0) {
-  //       rootCategories.push(categoryMap.get(category._id));
-  //     }
-  //   });
-  //   //   for (const good of data.GoodFind) {
-  //   //     let updateGood = {
-  //   //       ...good,
-  //   //       id: good._id,
-  //   //       parent: good.categories[0]._id,
-  //   //       droppable: false,
-  //   //     };
-  //   //     sampleData.push(updateGood);
-  //   //   }
-  //   // Рекурсивная функция для добавления категории и её детей в плоский список
-  //   function addCategoryAndChildrenToList(category) {
-  //     sortedCategories.push(category);
-  //     // Находим и добавляем детей категории, если они существуют
-  //     sampleData.forEach((item) => {
-  //       if (item.parent === category._id) {
-  //         addCategoryAndChildrenToList(categoryMap.get(item._id));
-  //       }
-  //     });
-  //   }
-
-  //   // Заполняем отсортированный список, начиная с корневых категорий
-  //   rootCategories.forEach((category) => {
-  //     addCategoryAndChildrenToList(category);
-  //   });
 
   for (const category of sampleData) {
     sortedCategories.push(category); // Добавляем категорию в результирующий массив
