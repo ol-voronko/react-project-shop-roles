@@ -10,14 +10,14 @@ import { useDragOver } from "@minoru/react-dnd-treeview";
 import styles from "./CustomNode.module.css";
 
 export const CustomNode = (props) => {
-  const { _id, name } = props.node;
+  const { id, name } = props.node;
   const [visibleInput, setVisibleInput] = useState(false);
   const [labelText, setLabelText] = useState(name);
   const indent = props.depth * 24;
 
   const handleToggle = (e) => {
     e.stopPropagation();
-    props.onToggle(props.node._id);
+    props.onToggle(props.node.id);
   };
 
   const handleShowInput = () => {
@@ -35,10 +35,10 @@ export const CustomNode = (props) => {
 
   const handleSubmit = () => {
     setVisibleInput(false);
-    props.onTextChange(_id, labelText);
+    props.onTextChange(id, labelText);
   };
 
-  const dragOverProps = useDragOver(_id, props.isOpen, props.onToggle);
+  const dragOverProps = useDragOver(id, props.isOpen, props.onToggle);
 
   return (
     <div

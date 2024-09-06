@@ -168,7 +168,7 @@ export const api = createApi({
         document: `query allGoods{
               GoodFind(query:"[{}]"){
                 _id name
-                categories{name}
+                categories{name _id}
                 price
               }
             }`,
