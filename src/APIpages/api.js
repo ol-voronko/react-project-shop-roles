@@ -1,18 +1,8 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { graphqlRequestBaseQuery } from "@rtk-query/graphql-request-base-query";
-import { configureStore, createSlice } from "@reduxjs/toolkit";
 import { cartSlice } from "./reducers/cartReducer";
-import storage from "redux-persist/lib/storage"; //рушій localStorage для персіста
-import {
-  persistReducer,
-  persistStore,
-  FLUSH, //localStoredReducer, екшони та таке інше
-  REHYDRATE,
-  PAUSE,
-  PERSIST,
-  PURGE,
-  REGISTER,
-} from "redux-persist";
+import { authSlice } from "./reducers/authReducer";
+
 import { feedSlice } from "./reducers/feedReducer";
 
 export const BACKEND_HOSTNAME = "shop-roles.node.ed.asmer.org.ua";
@@ -218,58 +208,45 @@ export const api = createApi({
                 }`,
       }),
     }),
+    upsertGoodName: builder.mutation({
+      query: (good) => ({
+        document: `mutation upsertGoodName($good:GoodInput){
+                GoodUpsert(good:$good){
+                _id name
+                }
+        }`,
+        variables: { good },
+      }),
+    }),
+    upsertCatName: builder.mutation({
+      query: (category) => ({
+        document: `mutation upsertCatName($category:CategoryInput){
+                CategoryUpsert(category:$category){
+                _id name
+                }
+        }`,
+        variables: { category },
+      }),
+    }),
+    deleteCat: builder.mutation({
+      query: (category) => ({
+        document: `mutation deleteCat($category:CategoryInput){
+                  CategoryDelete(category:$category){
+                  _id}
+                  }`,
+        variables: { category },
+      }),
+    }),
+    deleteGood: builder.mutation({
+      query: (good) => ({
+        document: `mutation deleteGood($good:GoodInput){
+                  GoodDelete(good:$good){
+                  _id}
+                  }`,
+        variables: { good },
+      }),
+    }),
   }),
 });
 
-const jwtDecode = (token) => {
-  try {
-    return JSON.parse(atob(token.split(".")[1]));
-  } catch {}
-};
-
-export const authSlice = createSlice({
-  name: "auth",
-  initialState: { token: null, payload: null, error: null },
-  reducers: {
-    login(state, { payload: token }) {
-      //другий параметр - об'єкт екшона, token потрапляє в ключ payload
-      // console.log('LOGIN', state, token)
-      const payload = jwtDecode(token);
-      if (payload) {
-        state.payload = payload;
-        state.token = token;
-      }
-    },
-    logout(state) {
-      state.payload = null;
-      state.token = null;
-    },
-    setAuthError(state, { payload: error }) {
-      state.error = error;
-    },
-  },
-});
-
-export const store = configureStore({
-  reducer: {
-    [authSlice.name]: persistReducer(
-      { key: "auth", storage },
-      authSlice.reducer
-    ),
-    [cartSlice.name]: cartSlice.reducer,
-    [feedSlice.name]: feedSlice.reducer,
-    [api.reducerPath]: api.reducer, //підключення слайса, створеннного createApi
-  },
-  middleware: (getDefaultMiddleware) => [
-    ...getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-      },
-    }),
-    api.middleware,
-  ], //додаємо мідлварь
-});
-
 console.log(api);
-
-const persistor = persistStore(store);

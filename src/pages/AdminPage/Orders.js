@@ -3,16 +3,16 @@ import { useSelector } from "react-redux";
 import { Button, Card, Typography } from "@mui/material";
 // import { orders } from "../data";
 import shadows from "@mui/material/styles/shadows";
-import { api } from "../APIpages/api";
+import { api } from "../../APIpages/api";
 import { useEffect, useRef } from "react";
 import {
   selectAllFeeds,
   selectFeedCount,
   selectFeedIsLoading,
-} from "../APIpages/selectors";
+} from "../../APIpages/selectors";
 import { useDispatch } from "react-redux";
-import { actionGetMoreOrders } from "../Thunks/actionGetMoreOrders";
-import { Height } from "@mui/icons-material";
+import { actionGetMoreOrders } from "../../Thunks/actionGetMoreOrders";
+import { createDateOFOrder, createTimeOfOrder } from "../History";
 
 const { useGetAllOrdersQuery } = api;
 
@@ -34,12 +34,9 @@ const Order = ({ order }) => {
       >
         <Typography variant="h6" color="info.dark">
           Замовлення № {_id} від {"  "}
-          {new Date(+createdAt).getDate().toString().padStart(2, "0")}/
-          {new Date(+createdAt).getMonth().toString().padStart(2, "0")}/
-          {new Date(+createdAt).getFullYear()}
+          {createDateOFOrder(createdAt)}
           {"  "}
-          {new Date(+createdAt).getHours().toString().padStart(2, "0")}:
-          {new Date(+createdAt).getMinutes().toString().padStart(2, "0")}
+          {createTimeOfOrder(createdAt)}
         </Typography>
         <div className="order-description-admin">
           {/* <Typography variant="h6" color="text.secondary">

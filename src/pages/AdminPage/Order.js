@@ -1,7 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import { Button, Card, Typography } from "@mui/material";
-
-import { api } from "../APIpages/api";
+import { api } from "../../APIpages/api";
+import { createDateOFOrder, createTimeOfOrder } from "../History";
 
 const { useGetOrderByIdQuery } = api;
 
@@ -47,12 +47,9 @@ export const Order = () => {
       >
         <Typography variant="h5" color="info.dark">
           Замовлення № {_id} від {"  "}
-          {new Date(+createdAt).getDate().toString().padStart(2, "0")}/
-          {new Date(+createdAt).getMonth().toString().padStart(2, "0")}/
-          {new Date(+createdAt).getFullYear()}
+          {createDateOFOrder(createdAt)}
           {"  "}
-          {new Date(+createdAt).getHours().toString().padStart(2, "0")}:
-          {new Date(+createdAt).getMinutes().toString().padStart(2, "0")}
+          {createTimeOfOrder(createdAt)}
         </Typography>
 
         <Typography

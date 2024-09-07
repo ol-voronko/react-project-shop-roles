@@ -23,7 +23,8 @@ import {
   selectCart,
 } from "../APIpages/selectors";
 import { useDispatch, useSelector } from "react-redux";
-import { authSlice, store } from "../APIpages/api";
+import { store } from "../APIpages/store";
+import { authSlice } from "../APIpages/reducers/authReducer";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { useState } from "react";
 

@@ -1,6 +1,6 @@
 import { actionAboutMe } from "./actionAboutMe.js";
 import { api } from "../APIpages/api.js";
-import { authSlice } from "../APIpages/api.js";
+import { authSlice } from "../APIpages/reducers/authReducer.js";
 
 export const actionFullLogin = (login, password) => async (dispatch) => {
   const token = await dispatch(

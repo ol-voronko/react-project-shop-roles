@@ -1,6 +1,6 @@
 import { actionFullLogin } from "./actionFullLogin";
 import { api } from "../APIpages/api";
-import { authSlice } from "../APIpages/api";
+import { authSlice } from "../APIpages/reducers/authReducer";
 
 export const actionFullRegister =
   (login, password, nick) => async (dispatch) => {

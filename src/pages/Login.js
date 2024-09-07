@@ -13,7 +13,9 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
-import { api, authSlice, store } from "../APIpages/api";
+// import { api, authSlice, store } from "../APIpages/api";
+import { api } from "../APIpages/api";
+import { authSlice } from "../APIpages/reducers/authReducer";
 import { selectAuthError, selectAuthToken } from "../APIpages/selectors";
 import { actionFullLogin } from "../Thunks/actionFullLogin";
 

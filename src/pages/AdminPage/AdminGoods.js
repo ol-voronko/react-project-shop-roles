@@ -1,5 +1,5 @@
 import { useParams, Link } from "react-router-dom";
-import { api } from "../APIpages/api.js";
+import { api } from "../../APIpages/api";
 import { Card, Button, Typography } from "@mui/material";
 import shadows from "@mui/material/styles/shadows";
 

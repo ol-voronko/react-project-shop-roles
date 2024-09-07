@@ -8,11 +8,25 @@ import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
 import { useDragOver } from "@minoru/react-dnd-treeview";
 import styles from "./CustomNode.module.css";
+import { api } from "../../APIpages/api";
+
+const {
+  useUpsertGoodNameMutation,
+  useUpsertCatNameMutation,
+  useDeleteCatMutation,
+  useDeleteGoodMutation,
+} = api;
 
 export const CustomNode = (props) => {
-  const { id, name } = props.node;
+  const { id, name, _id, droppable } = props.node;
   const [visibleInput, setVisibleInput] = useState(false);
   const [labelText, setLabelText] = useState(name);
+
+  const [upsertGoodNameQuery] = useUpsertGoodNameMutation();
+  const [upsertCatNameQuery] = useUpsertCatNameMutation();
+  const [deleteCatQuery] = useDeleteCatMutation();
+  const [deleteGoodQuery] = useDeleteGoodMutation();
+
   const indent = props.depth * 24;
 
   const handleToggle = (e) => {
@@ -33,11 +47,23 @@ export const CustomNode = (props) => {
     setLabelText(e.target.value);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    if (droppable) {
+      await upsertCatNameQuery({ _id, name: labelText });
+    } else {
+      await upsertGoodNameQuery({ _id, name: labelText });
+    }
     setVisibleInput(false);
     props.onTextChange(id, labelText);
   };
-
+  const handleDelete = async () => {
+    if (droppable) {
+      await deleteCatQuery({ _id });
+    } else {
+      await deleteGoodQuery({ _id });
+    }
+    props.onDelete(id);
+  };
   const dragOverProps = useDragOver(id, props.isOpen, props.onToggle);
 
   return (
@@ -79,11 +105,14 @@ export const CustomNode = (props) => {
           </div>
         ) : (
           <div className={styles.inputWrapper}>
-            <Typography variant="body2" className={styles.nodeLabel}>
+            <Typography variant="h5" className={styles.nodeLabel}>
               {props.node.name}
             </Typography>
             <IconButton className={styles.editButton} onClick={handleShowInput}>
               <EditIcon className={styles.editIcon} />
+            </IconButton>
+            <IconButton className={styles.editButton} onClick={handleDelete}>
+              <CloseIcon className={styles.editIcon} />
             </IconButton>
           </div>
         )}

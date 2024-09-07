@@ -1,15 +1,15 @@
 import { useParams, Link } from "react-router-dom";
-import { api } from "../APIpages/api";
+import { api } from "../../APIpages/api";
 import Card from "@mui/material/Card";
 import Typography from "@mui/material/Typography";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import TextField from "@mui/material/TextField";
 import { IconButton } from "@mui/material";
-import { BACKEND_HOSTNAME } from "../APIpages/api";
+import { BACKEND_HOSTNAME } from "../../APIpages/api";
 import ModeIcon from "@mui/icons-material/Mode";
 import CloseIcon from "@mui/icons-material/Close";
-import { Carousel } from "./PageGood";
+import { Carousel } from "../PageGood";
 
 import { useState } from "react";
 import { EditGoodAdmin } from "./EditGoodAdmin";

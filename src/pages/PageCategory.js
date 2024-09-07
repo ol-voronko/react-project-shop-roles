@@ -30,7 +30,9 @@ export const CardGood = ({ good }) => {
             component="img"
             style={{ width: "50%", aspectRatio: "1.2", margin: "auto" }}
             image={
-              images[0].url ? endpoint + images[0].url : "../images/box.jpg"
+              images.length && images[0].url
+                ? endpoint + images[0].url
+                : "../images/box.jpg"
             }
             alt={name}
           />

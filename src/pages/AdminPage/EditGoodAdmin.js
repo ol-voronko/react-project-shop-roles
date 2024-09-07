@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
-import { api } from "../APIpages/api";
+import { api } from "../../APIpages/api";
 import {
   Card,
   TextField,
@@ -9,8 +9,8 @@ import {
   CardActions,
 } from "@mui/material";
 import { useParams } from "react-router-dom";
-import { store } from "../APIpages/api";
-import { BACKEND_HOSTNAME } from "../APIpages/api";
+import { store } from "../../APIpages/store";
+import { BACKEND_HOSTNAME } from "../../APIpages/api";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 function Basic(props) {

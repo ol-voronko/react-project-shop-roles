@@ -7,7 +7,6 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
-
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -18,14 +17,14 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { Link, Switch, Route, useParams } from "react-router-dom";
-import { Order } from "./Order";
-import { Orders } from "./Orders";
-import { AdminGoods } from "./AdminGoods";
-import { OneGoodAdminPage } from "./OneGoodAdminPage";
+import { Order } from "./Order.js";
+import { Orders } from "./Orders.js";
+import { AdminGoods } from "./AdminGoods.js";
+import { OneGoodAdminPage } from "./OneGoodAdminPage.js";
 import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
 import { styled, alpha } from "@mui/material/styles";
-import { CategoryTree } from "./categoryTree/CategoryTree.js";
+import { CategoryTree } from "../categoryTree/CategoryTree.js";
 
 const drawerWidth = "20vw";
 
@@ -45,15 +44,15 @@ const Search = styled("div")(({ theme }) => ({
   },
 }));
 
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: "100%",
-  position: "absolute",
-  pointerEvents: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-}));
+// const SearchIconWrapper = styled("div")(({ theme }) => ({
+//   padding: theme.spacing(0, 2),
+//   height: "100%",
+//   position: "absolute",
+//   pointerEvents: "none",
+//   display: "flex",
+//   alignItems: "center",
+//   justifyContent: "center",
+// }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: "inherit",
@@ -125,14 +124,9 @@ export const AdminPage = (props) => {
           ))}
         </List>
         <Divider />
-        {/* <Typography component={Link} to={`/goods/${search(inputSearch)}`}>
-          <SearchIcon />
-        </Typography> */}
-
         <Search
           sx={{
             display: "flex",
-
             border: "1px solid #42a5f5",
           }}
         >
@@ -149,18 +143,6 @@ export const AdminPage = (props) => {
             onChange={handleChangeInputSearch}
           />
         </Search>
-        {/* <List>
-        {["All mail", "Trash", "Spam"].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List> */}
       </div>
     );
   };
@@ -242,7 +224,6 @@ export const AdminPage = (props) => {
         }}
       >
         <Toolbar />
-
         <Route path="/admin/goods" component={AdminGoods} />
         <Route path="/admin/good/:_id" component={OneGoodAdminPage} />
         <Route path="/admin/orders" component={Orders} />

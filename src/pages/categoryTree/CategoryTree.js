@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { DndProvider } from "react-dnd";
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import {
@@ -13,7 +13,12 @@ import styles from "../../App.css";
 // import { SampleData } from "./SampleData";
 import { api } from "../../APIpages/api";
 
-const { useGetAllCatsQuery, useGetAllGoodsQuery } = api;
+const {
+  useGetAllCatsQuery,
+  useGetAllGoodsQuery,
+  useUpsertGoodNameMutation,
+  useUpsertCatNameMutation,
+} = api;
 
 export const CategoryTree = () => {
   const sampleData = [];
@@ -21,7 +26,9 @@ export const CategoryTree = () => {
   const { isLoading: isQueryLoading, data: queryData } = useGetAllCatsQuery();
   const { isLoading, data } = useGetAllGoodsQuery();
   const [treeData, setTreeData] = useState(sortedCategories);
-
+  const [upsertGoodNameQuery] = useUpsertGoodNameMutation();
+  const [upsertCatNameQuery] = useUpsertCatNameMutation();
+  const draggedItemRef = useRef();
   if (isLoading || isQueryLoading) {
     return <h3>Loading...</h3>;
   }
@@ -86,8 +93,48 @@ export const CategoryTree = () => {
   }
 
   console.log(sortedCategories);
+  // const handleDrop = (newTree, ...otherParams) => {
+  //   console.log("handle drop", newTree, otherParams);
+  //   setTreeData(newTree);
+  // };
+  // const handleDrop = (newTree) => setTreeData(newTree);
+  const handleDrop = async (newTree, dropCat) => {
+    const draggedItem = draggedItemRef.current; // Получаем перемещаемый элемент
+    console.log("Dropped item:", draggedItem);
+    console.log("dropCat", dropCat);
 
-  const handleDrop = (newTree) => setTreeData(newTree);
+    const draggedItemInNewTree = newTree.find(
+      (good) => good.id === draggedItem.id
+    );
+    const draggedItemIndex = newTree.findIndex(
+      (item) => item.id === draggedItem.id
+    );
+    const updateNewTree = [...newTree];
+    if (draggedItemIndex !== -1) {
+      // Удаляем элемент из старого места
+      updateNewTree.splice(draggedItemIndex, 1);
+    }
+    const updatedDraggedItem = {
+      ...draggedItemInNewTree,
+      parent: dropCat.dropTargetId,
+    };
+    console.log(updateNewTree);
+    updateNewTree.splice(dropCat.destinationIndex - 1, 0, updatedDraggedItem);
+    console.log(updateNewTree);
+    if (draggedItemInNewTree.droppable) {
+      await upsertCatNameQuery({
+        _id: draggedItem.id,
+        subCategories: { _id: dropCat.dropTargetId },
+      });
+    } else {
+      await upsertGoodNameQuery({
+        _id: draggedItem.id,
+        categories: { _id: dropCat.dropTargetId },
+      });
+    }
+    setTreeData(updateNewTree);
+  };
+
   const handleTextChange = (id, value) => {
     const newTree = treeData.map((node) => {
       if (node.id === id) {
@@ -102,7 +149,10 @@ export const CategoryTree = () => {
 
     setTreeData(newTree);
   };
-
+  const handleDelete = (categoryId) => {
+    const updatedTree = treeData.filter((item) => item.id !== categoryId);
+    setTreeData(updatedTree);
+  };
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -118,11 +168,17 @@ export const CategoryTree = () => {
                 isOpen={isOpen}
                 onToggle={onToggle}
                 onTextChange={handleTextChange}
+                onDelete={handleDelete}
               />
             )}
-            dragPreviewRender={(monitorProps) => (
-              <CustomDragPreview monitorProps={monitorProps} />
-            )}
+            // dragPreviewRender={(monitorProps) => (
+            //   <CustomDragPreview monitorProps={monitorProps} />
+            // )}
+            // onDragStart={(...params) => console.log(params)}
+            onDragStart={(item) => {
+              draggedItemRef.current = item;
+              console.log("Drag Item", item);
+            }}
             onDrop={handleDrop}
             classes={{
               root: styles.treeRoot,

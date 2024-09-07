@@ -5,14 +5,14 @@ import { Button } from "@mui/material";
 
 const { useGetUserHistoryQuery } = api;
 
-const createDateOFOrder = (data) => {
+export const createDateOFOrder = (data) => {
   let date = new Date(+data).getDate().toString().padStart(2, "0");
   let month = (new Date(+data).getMonth() + 1).toString().padStart(2, "0");
   let year = new Date(+data).getFullYear();
   let dataOfOrder = `${date}/${month}/${year}`;
   return dataOfOrder;
 };
-const createTimeOfOrder = (data) => {
+export const createTimeOfOrder = (data) => {
   let hours = new Date(+data).getHours().toString().padStart(2, "0");
   let minutes = new Date(+data).getMinutes().toString().padStart(2, "0");
   return `${hours}:${minutes}`;
