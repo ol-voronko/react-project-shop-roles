@@ -63,6 +63,7 @@ export const api = createApi({
                             name
                             _id
                             price
+                            categories{_id name}
                             description
                             images{
                             url _id
@@ -156,7 +157,7 @@ export const api = createApi({
     getAllGoods: builder.query({
       query: () => ({
         document: `query allGoods{
-              GoodFind(query:"[{}]"){
+              GoodFind(query:"[{},{\\"sort\\":[{\\"_id\\":-1}]}]"){
                 _id name
                 categories{name _id}
                 price
@@ -203,7 +204,11 @@ export const api = createApi({
       query: () => ({
         document: `query allCategories{
               CategoryFind(query:"[{}]"){
-                  _id name  parent{_id}
+                  _id
+                  name
+                  goods{ _id name}
+                  image{url}
+                  parent{_id}
                   }
                 }`,
       }),
@@ -245,6 +250,27 @@ export const api = createApi({
                   }`,
         variables: { good },
       }),
+    }),
+    upsertCat: builder.mutation({
+      query: ({ category }) => ({
+        document: `mutation upsertCat($category:CategoryInput){
+              CategoryUpsert(category:$category){
+                  _id
+              }
+          }`,
+
+        variables: {
+          category: {
+            ...category,
+            ...(category.image
+              ? { image: { _id: category.image._id } }
+              : { image: null }),
+          },
+        },
+      }),
+      invalidatesTags: (result, error, arg) => [
+        { type: "Category", id: arg.category._id },
+      ],
     }),
   }),
 });

@@ -9,6 +9,9 @@ import EditIcon from "@mui/icons-material/Edit";
 import { useDragOver } from "@minoru/react-dnd-treeview";
 import styles from "./CustomNode.module.css";
 import { api } from "../../APIpages/api";
+import { BACKEND_HOSTNAME } from "../../APIpages/api";
+import defaultImage from "../../images/box.jpg";
+import { EditCatAdmin } from "./EditCatAdmin";
 
 const {
   useUpsertGoodNameMutation,
@@ -18,12 +21,12 @@ const {
 } = api;
 
 export const CustomNode = (props) => {
-  const { id, name, _id, droppable } = props.node;
+  const { id, name, _id, droppable, image } = props.node;
   const [visibleInput, setVisibleInput] = useState(false);
   const [labelText, setLabelText] = useState(name);
 
   const [upsertGoodNameQuery] = useUpsertGoodNameMutation();
-  const [upsertCatNameQuery] = useUpsertCatNameMutation();
+  const [upsertCat] = useUpsertCatNameMutation();
   const [deleteCatQuery] = useDeleteCatMutation();
   const [deleteGoodQuery] = useDeleteGoodMutation();
 
@@ -49,7 +52,7 @@ export const CustomNode = (props) => {
 
   const handleSubmit = async () => {
     if (droppable) {
-      await upsertCatNameQuery({ _id, name: labelText });
+      await upsertCat({ _id, name: labelText, image: image });
     } else {
       await upsertGoodNameQuery({ _id, name: labelText });
     }
@@ -78,34 +81,48 @@ export const CustomNode = (props) => {
         }`}
       >
         {props.node.droppable && (
-          <div onClick={handleToggle}>
+          <div
+            style={{ display: "flex", alignItems: "flex-start" }}
+            onClick={handleToggle}
+          >
             <ArrowRightIcon />
           </div>
         )}
       </div>
       <div className={styles.labelGridItem}>
         {visibleInput ? (
-          <div className={styles.inputWrapper}>
-            <TextField
-              className={`${styles.textField}
-              ${styles.nodeInput}`}
-              value={labelText}
-              onChange={handleChangeText}
+          droppable ? (
+            <EditCatAdmin
+              defaultCat={{ _id, name, image }}
+              // image={image}
+              // labelText={labelText}
+              // handleChangeText={handleChangeText}
+              // handleSubmit={handleSubmit}
+              handleCancel={handleCancel}
             />
-            <IconButton
-              className={styles.editButton}
-              onClick={handleSubmit}
-              disabled={labelText === ""}
-            >
-              <CheckIcon className={styles.editIcon} />
-            </IconButton>
-            <IconButton className={styles.editButton} onClick={handleCancel}>
-              <CloseIcon className={styles.editIcon} />
-            </IconButton>
-          </div>
+          ) : (
+            <div className={styles.inputWrapper}>
+              <TextField
+                className={`${styles.textField}
+              ${styles.nodeInput}`}
+                value={labelText}
+                onChange={handleChangeText}
+              />
+              <IconButton
+                className={styles.editButton}
+                onClick={handleSubmit}
+                disabled={labelText === ""}
+              >
+                <CheckIcon className={styles.editIcon} />
+              </IconButton>
+              <IconButton className={styles.editButton} onClick={handleCancel}>
+                <CloseIcon className={styles.editIcon} />
+              </IconButton>
+            </div>
+          )
         ) : (
           <div className={styles.inputWrapper}>
-            <Typography variant="h5" className={styles.nodeLabel}>
+            <Typography variant="h6" className={styles.nodeLabel}>
               {props.node.name}
             </Typography>
             <IconButton className={styles.editButton} onClick={handleShowInput}>

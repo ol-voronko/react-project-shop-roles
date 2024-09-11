@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { useDropzone } from "react-dropzone";
 import { api } from "../../APIpages/api";
 import {
@@ -8,38 +9,20 @@ import {
   CardContent,
   CardActions,
   IconButton,
+  Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { store } from "../../APIpages/store";
 import { BACKEND_HOSTNAME } from "../../APIpages/api";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-
-const { useGetGoodByIdQuery, useUpsertGoodMutation, useDeleteGoodMutation } =
-  api;
-
-export const uploadFile = (file) => {
-  const fd = new FormData();
-  fd.append("photo", file);
-  const { token } = store.getState().auth;
-  return fetch(`http://${BACKEND_HOSTNAME}/upload`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    body: fd,
-  }).then((res) => res.json());
-};
-
-export const uploadFiles = (files) => Promise.all(files.map(uploadFile));
-
-export const reorder = (list, startIndex, endIndex) => {
-  const result = Array.from(list);
-  const [removed] = result.splice(startIndex, 1);
-  result.splice(endIndex, 0, removed);
-
-  return result;
-};
+import {
+  uploadFile,
+  uploadFiles,
+  reorder,
+  DND,
+  DraggableImage,
+} from "./EditGoodAdmin";
 
 const grid = 8;
 
@@ -58,7 +41,6 @@ const getListStyle = (isDraggingOver, direction) => ({
   // marginLeft: '-50vw',
   // marginRight: '-50vw'
 });
-
 const getItemStyle = (isDragging, draggableStyle) => ({
   // some basic styles to make the items look a bit nicer
   userSelect: "none",
@@ -76,94 +58,8 @@ const getItemStyle = (isDragging, draggableStyle) => ({
   // styles we need to apply on draggables
   ...draggableStyle,
 });
-
-export const DND = ({
-  items,
-  keyField,
-  onChange,
-  render: Render,
-  propsForRender,
-  dataProp = "item",
-  direction = "vertical",
-}) => {
-  const onDragEnd = (result) => {
-    // dropped outside the list
-    if (!result.destination) {
-      return;
-    }
-
-    const newItems = reorder(
-      items,
-      result.source.index,
-      result.destination.index
-    );
-
-    onChange(newItems);
-  };
-  // Normally you would want to split things out into separate components.
-  // But in this example everything is just done in one place for simplicity
-  return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <Droppable
-        style={{ transform: "none" }}
-        droppableId="droppable"
-        direction={direction}
-      >
-        {(provided, snapshot) => (
-          <div
-            {...provided.droppableProps}
-            ref={provided.innerRef}
-            style={getListStyle(snapshot.isDraggingOver, direction)}
-          >
-            {items?.map?.((item, index) => (
-              <Draggable
-                key={item[keyField]}
-                draggableId={`id_${item[keyField]}`}
-                index={index}
-              >
-                {(provided, snapshot) => (
-                  <div
-                    ref={provided.innerRef}
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                    style={getItemStyle(
-                      snapshot.isDragging,
-                      provided.draggableProps.style
-                    )}
-                  >
-                    <Render
-                      {...{
-                        [dataProp]: item,
-                        isDragging: snapshot.isDragging,
-                        index,
-                        ...propsForRender,
-                      }}
-                    />
-                  </div>
-                )}
-              </Draggable>
-            ))}
-            {provided.placeholder}
-          </div>
-        )}
-      </Droppable>
-    </DragDropContext>
-  );
-};
-
-export const DraggableImage = ({ image, onDelete }) => (
-  <div className="draggable-image">
-    <img
-      style={{ width: "150px", height: "150px" }}
-      src={`http://${BACKEND_HOSTNAME}/${image.url}`}
-    />
-    <IconButton onClick={() => onDelete(image)}>
-      <CloseIcon />
-    </IconButton>
-  </div>
-);
-
-export const UpsertGood = ({ defaultGood }) => {
+const { useUpsertGoodMutation } = api;
+export const AddGoodAdmin = () => {
   const [good, setGood] = useState({
     images: [],
     name: " ",
@@ -172,18 +68,10 @@ export const UpsertGood = ({ defaultGood }) => {
     categories: [{ name: "Without Category", _id: "66ddcab8e866766ddd7c6893" }],
   });
 
-  useEffect(() => {
-    if (defaultGood) {
-      setGood(defaultGood);
-    }
-  }, [defaultGood]);
-
   const [upsertQuery] = useUpsertGoodMutation();
-  const [deleteGood] = useDeleteGoodMutation();
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     noClickBubbling: true,
   });
-
   useEffect(() => {
     if (acceptedFiles.length)
       uploadFiles(acceptedFiles).then((results) =>
@@ -204,6 +92,7 @@ export const UpsertGood = ({ defaultGood }) => {
             flexDirection: "column",
             gap: "5%",
             color: "main-light",
+            boxShadow: " 0px 0px 10px 10px rgb(241, 237, 237)",
           }}
         >
           <IconButton
@@ -215,8 +104,10 @@ export const UpsertGood = ({ defaultGood }) => {
           >
             <CloseIcon fontSize="inherit" />
           </IconButton>
-
           <div>
+            <Typography variant="h4" color="info.light">
+              Новий товар
+            </Typography>
             <div className="dnd-images">
               <DND
                 items={good.images}
@@ -272,7 +163,11 @@ export const UpsertGood = ({ defaultGood }) => {
             <Button
               color="primary"
               variant="outlined"
-              sx={{ marginRight: "5vw", fontSize: "1.2rem", fontWeight: "700" }}
+              sx={{
+                marginRight: "5vw",
+                fontSize: "1.2rem",
+                fontWeight: "700",
+              }}
               onClick={() => upsertQuery({ good })}
             >
               Зберегти
@@ -281,23 +176,5 @@ export const UpsertGood = ({ defaultGood }) => {
         </Card>
       </div>
     </div>
-  );
-};
-
-const ShowAndEditGood = () => {
-  const { _id } = useParams();
-  const { isFetching, data } = useGetGoodByIdQuery({ _id });
-  return (
-    <div>
-      {data?.GoodFindOne && <UpsertGood defaultGood={data.GoodFindOne} />}
-    </div>
-  );
-};
-export const EditGoodAdmin = () => {
-  return (
-    <>
-      <h3>Редагуємо</h3>
-      <ShowAndEditGood />
-    </>
   );
 };

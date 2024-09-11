@@ -13,14 +13,16 @@ import { Carousel } from "../PageGood";
 
 import { useState } from "react";
 import { EditGoodAdmin } from "./EditGoodAdmin";
+import { CardGoodAdmin } from "./CardGoodAdmin";
 
-const { useGetGoodByIdQuery } = api;
+const { useGetGoodByIdQuery, useDeleteGoodMutation } = api;
 
 export const OneGoodAdminPage = () => {
   const [isRedact, setIsRedact] = useState(false);
 
   const { _id } = useParams();
   const { isLoading, data } = useGetGoodByIdQuery({ _id });
+  const [deleteGood] = useDeleteGoodMutation();
 
   if (isLoading) {
     return <h3>Loading...please wait...</h3>;
@@ -28,11 +30,10 @@ export const OneGoodAdminPage = () => {
   const {
     GoodFindOne: { name, description, images, price },
   } = data;
+  const handleDelete = () => deleteGood({ _id });
 
   return (
     <div className="category-all">
-      {isRedact && <EditGoodAdmin />}
-
       <Card
         sx={{
           width: "50vw",
@@ -59,8 +60,13 @@ export const OneGoodAdminPage = () => {
             <CloseIcon fontSize="inherit" />
           </IconButton>
         </div>
+        {isRedact ? (
+          <EditGoodAdmin />
+        ) : (
+          <CardGoodAdmin good={data?.GoodFindOne} handleDelete={handleDelete} />
+        )}
         {/**<Crasivyi /> */}
-        <CardMedia
+        {/* <CardMedia
           component="div"
           sx={{
             display: "flex",
@@ -94,7 +100,7 @@ export const OneGoodAdminPage = () => {
           <Typography variant="h5" color="text.primary" gutterBottom>
             {price} грн
           </Typography>
-        </CardContent>
+        </CardContent> */}
       </Card>
     </div>
   );

@@ -140,7 +140,16 @@ main {
   align-items: center;
   justify-content: center;
 }
-
+.dnd-images {
+  padding: 5%;
+  display: flex;
+  flex-wrap: wrap;
+  overflow-x: hidden;
+}
+.draggable-image {
+  display: flex;
+  align-items: flex-start;
+}
 .div-history {
   margin-bottom: 5vw;
   color: rgb(25, 118, 210);

@@ -1,14 +1,19 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { endpoint } from "./Categories";
-import { Button, CardActions } from "@mui/material";
-import Card from "@mui/material/Card";
-import Typography from "@mui/material/Typography";
-import CardMedia from "@mui/material/CardMedia";
-import CardContent from "@mui/material/CardContent";
+import {
+  Button,
+  CardActions,
+  IconButton,
+  Card,
+  Typography,
+  CardMedia,
+  CardContent,
+} from "@mui/material";
 import { api } from "../APIpages/api";
 import { cartAdd } from "../APIpages/reducers/cartReducer";
 import { useDispatch } from "react-redux";
+import CloseIcon from "@mui/icons-material/Close";
 
 const { useGetGoodByIdQuery } = api;
 export const Carousel = ({ images }) => {
@@ -86,17 +91,28 @@ export const PageGood = () => {
     return <h3>Loading...</h3>;
   }
   const {
-    GoodFindOne: { name, description, images, price },
+    GoodFindOne: { name, description, images, price, categories },
   } = data;
 
   return (
     <div className="category-all">
       <Card
         sx={{
+          display: "flex",
+          flexDirection: "column",
           width: "50vw",
           boxShadow: " 0px 0px 10px 10px rgb(241, 237, 237)",
         }}
       >
+        <IconButton
+          component={Link}
+          to={`/category/${categories[0]._id}`}
+          aria-label="delete"
+          size="large"
+          sx={{ alignSelf: "flex-end" }}
+        >
+          <CloseIcon fontSize="inherit" />
+        </IconButton>
         <CardMedia
           component="div"
           sx={{

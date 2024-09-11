@@ -1,5 +1,6 @@
 import { useSelector } from "react-redux";
-import { selectAuthToken, selectUserRole } from "../APIpages/selectors";
+import { selectAuthToken } from "../../APIpages/selectors";
+import { selectUserRole } from "../../APIpages/selectors";
 import { useHistory } from "react-router-dom";
 import { Route } from "react-router-dom";
 import { useState } from "react";

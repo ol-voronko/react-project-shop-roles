@@ -214,7 +214,7 @@ function Header() {
             <SearchIcon />
           </Typography>
           <Search>
-            <SearchIconWrapper></SearchIconWrapper>
+            {/* <SearchIconWrapper></SearchIconWrapper> */}
 
             <StyledInputBase
               placeholder="Пошук...…"

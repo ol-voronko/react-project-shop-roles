@@ -35,16 +35,7 @@ export const CardCategory = ({ good }) => {
           <Typography gutterBottom variant="h5" component="div">
             <Link to={`/category/${good._id}`}>{good.name}</Link>
           </Typography>
-          {/* <Typography variant="body2" color="text.secondary">
-            {good.description}
-          </Typography> */}
         </CardContent>
-
-        {/* <CardActions>
-          <Button size="large" variant="outlined" color="primary">
-            <Link to={`/category/${good._id}`}>Детальніше</Link>
-          </Button>
-        </CardActions> */}
       </Card>
     </div>
   );

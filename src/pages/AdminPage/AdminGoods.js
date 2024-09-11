@@ -5,7 +5,7 @@ import shadows from "@mui/material/styles/shadows";
 
 const { useGetAllGoodsQuery } = api;
 
-const OneGoodAdmin = ({ good }) => {
+export const CardOneGoodAdmin = ({ good }) => {
   const { name, price, _id } = good;
   return (
     <>
@@ -44,13 +44,21 @@ export const AdminGoods = () => {
   if (isLoading) {
     return <h4>Loading...</h4>;
   }
-  const { GoodFind } = data;
+
   return (
-    <>
+    <div className="orders-admin">
       <h3>Усі товари</h3>
+      <Button
+        component={Link}
+        to="/admin/addGood"
+        variant="contained"
+        sx={{ mt: 3, mb: 2, alignSelf: "flex-start" }}
+      >
+        Додати товар
+      </Button>
       {data.GoodFind.map((good) => (
-        <OneGoodAdmin good={good} />
+        <CardOneGoodAdmin good={good} />
       ))}
-    </>
+    </div>
   );
 };

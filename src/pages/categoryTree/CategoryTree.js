@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
+import { Link } from "react-router-dom";
 import { DndProvider } from "react-dnd";
-import { ThemeProvider, CssBaseline } from "@mui/material";
+import { ThemeProvider, CssBaseline, Button } from "@mui/material";
 import {
   Tree,
   MultiBackend,
@@ -10,7 +11,7 @@ import { CustomNode } from "./CustomNode";
 import { CustomDragPreview } from "./CustomDragPreview";
 import { theme } from "./theme";
 import styles from "../../App.css";
-// import { SampleData } from "./SampleData";
+
 import { api } from "../../APIpages/api";
 
 const {
@@ -22,10 +23,10 @@ const {
 
 export const CategoryTree = () => {
   const sampleData = [];
-  const sortedCategories = [];
+  // const sortedCategories = [];
   const { isLoading: isQueryLoading, data: queryData } = useGetAllCatsQuery();
   const { isLoading, data } = useGetAllGoodsQuery();
-  const [treeData, setTreeData] = useState(sortedCategories);
+  const [treeData, setTreeData] = useState(sampleData);
   const [upsertGoodNameQuery] = useUpsertGoodNameMutation();
   const [upsertCatNameQuery] = useUpsertCatNameMutation();
   const draggedItemRef = useRef();
@@ -43,61 +44,47 @@ export const CategoryTree = () => {
     let updateCategory;
     if (category?.parent === null) {
       updateCategory = {
-        ...category,
+        image: category.image,
+        _id: category._id,
         id: category._id,
+        name: category.name,
         parent: 0,
         droppable: true,
       };
     } else if (parentsId.includes(category.parent._id)) {
       updateCategory = {
-        ...category,
+        image: category.image,
+        _id: category._id,
+        name: category.name,
         id: category._id,
-        parent: category.parent._id,
+        parent: category.parent ? category.parent._id : 0,
         droppable: true,
       };
-    } else {
-      updateCategory = {
-        ...category,
-        id: category._id,
-        parent: category.parent._id,
-        droppable: false,
-      };
     }
+    // else {
+    //   updateCategory = {
+    //     ...category,
+    //     id: category._id,
+    //     parent: category.parent._id,
+    //     droppable: true,
+    //   };
+    // }
     sampleData.push(updateCategory);
-  }
-
-  console.log(sampleData);
-
-  for (const category of sampleData) {
-    sortedCategories.push(category); // Добавляем категорию в результирующий массив
-
-    // Теперь находим товары, относящиеся к данной категории
-    for (const good of data.GoodFind) {
-      // Проверяем, если товар относится к текущей категории
-      if (
-        Array.isArray(good.categories) &&
-        good.categories.length &&
-        good?.categories[0]._id === category._id
-      ) {
-        // Добавляем товар после категории
-        sortedCategories.push({
+    if (Array.isArray(category.goods) && category.goods.length) {
+      for (const good of category.goods) {
+        sampleData.push({
           id: good._id,
           _id: good._id,
           name: good.name,
           parent: category._id, // Указываем родительскую категорию
-
-          droppable: false, // Товар не может содержать других товаров
+          droppable: false,
         });
       }
     }
   }
 
-  console.log(sortedCategories);
-  // const handleDrop = (newTree, ...otherParams) => {
-  //   console.log("handle drop", newTree, otherParams);
-  //   setTreeData(newTree);
-  // };
-  // const handleDrop = (newTree) => setTreeData(newTree);
+  console.log(sampleData);
+
   const handleDrop = async (newTree, dropCat) => {
     const draggedItem = draggedItemRef.current; // Получаем перемещаемый элемент
     console.log("Dropped item:", draggedItem);
@@ -134,7 +121,8 @@ export const CategoryTree = () => {
     }
     setTreeData(updateNewTree);
   };
-
+  console.log("товари ", data.GoodFind.length);
+  console.log("cats ", queryData.CategoryFind.length);
   const handleTextChange = (id, value) => {
     const newTree = treeData.map((node) => {
       if (node.id === id) {
@@ -158,6 +146,14 @@ export const CategoryTree = () => {
       <CssBaseline />
       <DndProvider backend={MultiBackend} options={getBackendOptions()}>
         <div className={styles.app}>
+          <Button
+            component={Link}
+            to="/admin/addCat"
+            variant="contained"
+            sx={{ mt: 3, mb: 2, alignSelf: "flex-start" }}
+          >
+            Додати категорію
+          </Button>
           <Tree
             tree={treeData}
             rootId={0}

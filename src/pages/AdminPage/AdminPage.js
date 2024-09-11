@@ -16,7 +16,7 @@ import ListItemText from "@mui/material/ListItemText";
 import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import { Link, Switch, Route, useParams } from "react-router-dom";
+import { Link, Route, useParams } from "react-router-dom";
 import { Order } from "./Order.js";
 import { Orders } from "./Orders.js";
 import { AdminGoods } from "./AdminGoods.js";
@@ -25,6 +25,10 @@ import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
 import { styled, alpha } from "@mui/material/styles";
 import { CategoryTree } from "../categoryTree/CategoryTree.js";
+import { AdminSearch } from "./AdminSearch.js";
+import { AddGoodAdmin } from "./AddGoodAdmin.js";
+import { AddCatAdmin } from "./AddCatAdmin.js";
+import { UpsertGood } from "./EditGoodAdmin.js";
 
 const drawerWidth = "20vw";
 
@@ -103,6 +107,7 @@ export const AdminPage = (props) => {
     const handleChangeInputSearch = (e) => {
       setInputSearch(e.target.value);
     };
+
     const search = (value) => {
       let mode = value.split(/\s+/).join("|");
       return mode;
@@ -130,7 +135,10 @@ export const AdminPage = (props) => {
             border: "1px solid #42a5f5",
           }}
         >
-          <Typography component={Link} to={`/goods/${search(inputSearch)}`}>
+          <Typography
+            component={Link}
+            to={`/admin/goods/${search(inputSearch)}`}
+          >
             <SearchIcon />
           </Typography>
 
@@ -141,6 +149,11 @@ export const AdminPage = (props) => {
             }}
             value={inputSearch}
             onChange={handleChangeInputSearch}
+            // onKeyPress={(e) => {
+            //   if (e.key === "Enter") {
+            //     handleSearch();
+            //   }
+            //
           />
         </Search>
       </div>
@@ -224,11 +237,15 @@ export const AdminPage = (props) => {
         }}
       >
         <Toolbar />
-        <Route path="/admin/goods" component={AdminGoods} />
+        <Route exact path="/admin/goods" component={AdminGoods} />
         <Route path="/admin/good/:_id" component={OneGoodAdminPage} />
+        <Route path="/admin/goods/:search" component={AdminSearch} />
         <Route path="/admin/orders" component={Orders} />
         <Route exact path="/admin/order/:_id" component={Order} />
         <Route path="/admin/categories" component={CategoryTree} />
+        {/* <Route path="/admin/addGood" component={AddGoodAdmin} /> */}
+        <Route path="/admin/addGood" component={UpsertGood} />
+        <Route path="/admin/addCat" component={AddCatAdmin} />
       </Box>
     </Box>
   );
