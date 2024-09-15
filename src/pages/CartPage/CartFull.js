@@ -1,17 +1,8 @@
 import { useDispatch } from "react-redux";
 import { CardCart } from "./CardCart";
-import {
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  Typography,
-  IconButton,
-} from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
+import { Button } from "@mui/material";
 import { cartClear } from "../../APIpages/reducers/cartReducer";
 import { actionFullOrder } from "../../Thunks/actionFullOrder";
-import shadows from "@mui/material/styles/shadows";
 
 export const CartFull = ({ goods }) => {
   const dispatch = useDispatch();
@@ -28,7 +19,6 @@ export const CartFull = ({ goods }) => {
   return (
     <div className="cart-full">
       <h3>Ваше замовлення</h3>
-
       {goods.map(({ count, good }) => (
         <CardCart key={good._id} good={good} count={count} />
       ))}

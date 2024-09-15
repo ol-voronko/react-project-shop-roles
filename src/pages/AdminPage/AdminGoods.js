@@ -1,4 +1,4 @@
-import { useParams, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { api } from "../../APIpages/api";
 import { Card, Button, Typography } from "@mui/material";
 import shadows from "@mui/material/styles/shadows";
@@ -15,14 +15,12 @@ export const CardOneGoodAdmin = ({ good }) => {
           mt: 2,
           p: 2,
           display: "flex",
-          // flexDirection: "row",
           justifyContent: "space-between",
           //boxShadow: " 0px 0px 10px 10px rgb(241, 237, 237)",
           boxShadow: shadows[10],
           width: "90%",
         }}
       >
-        {/* <div className="order-description-admin"> */}
         <Typography variant="h6" color="text.secondary" width={"50%"}>
           {name}
         </Typography>

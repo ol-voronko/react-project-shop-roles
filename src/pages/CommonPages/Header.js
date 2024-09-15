@@ -16,19 +16,13 @@ import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
 import { styled, alpha } from "@mui/material/styles";
 import { Link } from "react-router-dom";
-import createHistory from "history/createBrowserHistory";
-import {
-  selectAuthAcl,
-  selectAuthToken,
-  selectCart,
-} from "../../APIpages/selectors";
+
+import { selectAuthToken, selectCart } from "../../APIpages/selectors";
 import { useDispatch, useSelector } from "react-redux";
 import { store } from "../../APIpages/store";
 import { authSlice } from "../../APIpages/reducers/authReducer";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { useState } from "react";
-
-const history = createHistory();
 
 const pages = [
   { title: "Головна", url: "/" },
@@ -54,16 +48,6 @@ const Search = styled("div")(({ theme }) => ({
     marginLeft: theme.spacing(1),
     width: "auto",
   },
-}));
-
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: "100%",
-  position: "absolute",
-  pointerEvents: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
@@ -214,8 +198,6 @@ function Header() {
             <SearchIcon />
           </Typography>
           <Search>
-            {/* <SearchIconWrapper></SearchIconWrapper> */}
-
             <StyledInputBase
               placeholder="Пошук...…"
               inputProps={{

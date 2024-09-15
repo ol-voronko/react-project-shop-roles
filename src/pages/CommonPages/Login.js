@@ -1,5 +1,4 @@
 import Avatar from "@mui/material/Avatar";
-// import LockOutlinedIcon from
 import { Button } from "@mui/material";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
@@ -8,12 +7,10 @@ import Grid from "@mui/material/Grid";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
-// import { api, authSlice, store } from "../APIpages/api";
 import { api } from "../../APIpages/api";
 import { authSlice } from "../../APIpages/reducers/authReducer";
 import { selectAuthError, selectAuthToken } from "../../APIpages/selectors";
@@ -60,7 +57,7 @@ export const Login = () => {
     }
   }, [token]);
 
-  const [loginQuery, { isLoading, data }] = useLoginMutation();
+  // const [loginQuery, { isLoading, data }] = useLoginMutation();
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">

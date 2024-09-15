@@ -12,7 +12,7 @@ import { BACKEND_HOSTNAME } from "../../APIpages/api";
 
 export const CardCart = ({ count, good }) => {
   const dispatch = useDispatch();
-  // const [goodCount, setGoodCount] = useState(count);
+
   const { name, price, images, _id } = good;
 
   return (
@@ -68,7 +68,6 @@ export const CardCart = ({ count, good }) => {
                   marginRight: "1vw",
                   fontSize: "calc(12px + 2vmin)",
                 }}
-                // onChange={(e) => setGoodCount(e.target.value)}
                 value={count}
               />
               <Button

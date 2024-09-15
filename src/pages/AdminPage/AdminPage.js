@@ -1,6 +1,5 @@
 import * as React from "react";
 import { useState } from "react";
-import PropTypes from "prop-types";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -14,8 +13,8 @@ import ListItemText from "@mui/material/ListItemText";
 import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import { Link, Route, useParams } from "react-router-dom";
-import { OneFullOrderAdmin, Order } from "./Order.js";
+import { Link, Route } from "react-router-dom";
+import { OneFullOrderAdmin } from "./Order.js";
 import { Orders } from "./Orders.js";
 import { AdminGoods } from "./AdminGoods.js";
 import { OneGoodAdminPage } from "./OneGoodAdminPage.js";
@@ -45,22 +44,11 @@ const Search = styled("div")(({ theme }) => ({
   },
 }));
 
-// const SearchIconWrapper = styled("div")(({ theme }) => ({
-//   padding: theme.spacing(0, 2),
-//   height: "100%",
-//   position: "absolute",
-//   pointerEvents: "none",
-//   display: "flex",
-//   alignItems: "center",
-//   justifyContent: "center",
-// }));
-
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: "inherit",
   width: "100%",
   "& .MuiInputBase-input": {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create("width"),
     [theme.breakpoints.up("sm")]: {
@@ -73,7 +61,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export const AdminPage = (props) => {
-  // const { _id } = useParams();
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [isClosing, setIsClosing] = React.useState(false);
@@ -146,11 +133,6 @@ export const AdminPage = (props) => {
             }}
             value={inputSearch}
             onChange={handleChangeInputSearch}
-            // onKeyPress={(e) => {
-            //   if (e.key === "Enter") {
-            //     handleSearch();
-            //   }
-            //
           />
         </Search>
       </div>
@@ -167,8 +149,6 @@ export const AdminPage = (props) => {
         position="fixed"
         sx={{
           width: { sm: `calc(100vw- ${drawerWidth})` },
-          //   ml: { sm: "10vw" },
-          //   ml: { sm: { drawerWidth } },
         }}
       >
         <Toolbar>
@@ -191,7 +171,6 @@ export const AdminPage = (props) => {
         sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
         aria-label="mailbox folders"
       >
-        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
         <Drawer
           container={container}
           variant="temporary"
@@ -199,7 +178,7 @@ export const AdminPage = (props) => {
           onTransitionEnd={handleDrawerTransitionEnd}
           onClose={handleDrawerClose}
           ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
+            keepMounted: true,
           }}
           sx={{
             display: { xs: "block", sm: "none" },
@@ -240,7 +219,6 @@ export const AdminPage = (props) => {
         <Route path="/admin/orders" component={Orders} />
         <Route exact path="/admin/order/:_id" component={OneFullOrderAdmin} />
         <Route path="/admin/categories" component={CategoryTree} />
-        {/* <Route path="/admin/addGood" component={AddGoodAdmin} /> */}
         <Route path="/admin/addGood" component={UpsertGood} />
         <Route path="/admin/addCat" component={AddCatAdmin} />
       </Box>

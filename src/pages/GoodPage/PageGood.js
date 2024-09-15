@@ -1,6 +1,4 @@
-import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
-// import { endpoint } from "./Categories";
 import {
   Button,
   CardActions,
@@ -57,19 +55,13 @@ export const PageGood = () => {
             flexDirection: "column",
             gap: "5vh",
             justifyContent: "space-between",
-            // height: "50%",
             marginTop: "5vh",
           }}
         >
           <Carousel images={images} />
         </CardMedia>
         <CardContent sx={{ marginTop: "5vh" }}>
-          <Typography
-            // gutterBottom
-            variant="h4"
-            component="div"
-            color="primary.light"
-          >
+          <Typography variant="h4" component="div" color="primary.light">
             {name}
           </Typography>
 

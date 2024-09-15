@@ -8,7 +8,7 @@ import {
   getBackendOptions,
 } from "@minoru/react-dnd-treeview";
 import { CustomNode } from "./CustomNode";
-import { CustomDragPreview } from "./CustomDragPreview";
+
 import { theme } from "./theme";
 import styles from "../../App.css";
 
@@ -17,16 +17,16 @@ import shadows from "@mui/material/styles/shadows";
 
 const {
   useGetAllCatsQuery,
-  useGetAllGoodsQuery,
+
   useUpsertGoodNameMutation,
   useUpsertCatNameMutation,
 } = api;
 
 export const CategoryTree = () => {
   const sampleData = [];
-  // const sortedCategories = [];
+
   const { isLoading: isQueryLoading, data: queryData } = useGetAllCatsQuery();
-  // const { isLoading, data } = useGetAllGoodsQuery();
+
   const [treeData, setTreeData] = useState(sampleData);
   const [upsertGoodNameQuery] = useUpsertGoodNameMutation();
   const [upsertCatNameQuery] = useUpsertCatNameMutation();
@@ -43,16 +43,7 @@ export const CategoryTree = () => {
   }
   for (const category of queryData.CategoryFind) {
     let updateCategory;
-    // if (category?.parent === null) {
-    //   updateCategory = {
-    //     image: category.image,
-    //     _id: category._id,
-    //     id: category._id,
-    //     name: category.name,
-    //     parent: 0,
-    //     droppable: true,
-    //   };
-    // } else if (parentsId.includes(category.parent._id)) {
+
     updateCategory = {
       image: category.image,
       _id: category._id,
@@ -61,15 +52,7 @@ export const CategoryTree = () => {
       parent: category.parent ? category.parent._id : 0,
       droppable: true,
     };
-    // }
-    // else {
-    //   updateCategory = {
-    //     ...category,
-    //     id: category._id,
-    //     parent: category.parent._id,
-    //     droppable: true,
-    //   };
-    // }
+
     sampleData.push(updateCategory);
     if (Array.isArray(category.goods) && category.goods.length) {
       for (const good of category.goods) {
@@ -77,7 +60,7 @@ export const CategoryTree = () => {
           id: good._id,
           _id: good._id,
           name: good.name,
-          parent: category._id, // Указываем родительскую категорию
+          parent: category._id,
           droppable: false,
         });
       }
@@ -122,8 +105,7 @@ export const CategoryTree = () => {
     }
     setTreeData(updateNewTree);
   };
-  // console.log("товари ", data.GoodFind.length);
-  // console.log("cats ", queryData.CategoryFind.length);
+
   const handleTextChange = (id, value) => {
     const newTree = treeData.map((node) => {
       if (node.id === id) {
@@ -173,10 +155,6 @@ export const CategoryTree = () => {
                 onDelete={handleDelete}
               />
             )}
-            // dragPreviewRender={(monitorProps) => (
-            //   <CustomDragPreview monitorProps={monitorProps} />
-            // )}
-            // onDragStart={(...params) => console.log(params)}
             onDragStart={(item) => {
               draggedItemRef.current = item;
               console.log("Drag Item", item);

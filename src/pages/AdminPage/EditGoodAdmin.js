@@ -45,36 +45,21 @@ export const reorder = (list, startIndex, endIndex) => {
 const grid = 8;
 
 const getListStyle = (isDraggingOver, direction) => ({
-  // background: isDraggingOver ? "lightblue" : "lightgrey",
-  // padding: grid,
-  // // width: 250
   display: direction === "horizontal" ? "flex" : "",
   overflow: "auto",
-  // maxWidth: '80%',
-  // width: '80%',
-  // // width: '100px',
-  // position: 'relative',
-  // left: '50%',
-  // right: '50%',
-  // marginLeft: '-50vw',
-  // marginRight: '-50vw'
 });
 
 const getItemStyle = (isDragging, draggableStyle) => ({
   // some basic styles to make the items look a bit nicer
   userSelect: "none",
   padding: grid / 4,
-  // margin: `0 0 ${grid}px 0`,
+
   margin: grid,
 
-  // change background colour if dragging
-  // background: isDragging ? "lightgreen" : "white",
   background: "white",
   border: isDragging ? "2px solid" : "",
   borderRadius: "5px",
-  // margin: grid,
 
-  // styles we need to apply on draggables
   ...draggableStyle,
 });
 
@@ -88,7 +73,6 @@ export const DND = ({
   direction = "vertical",
 }) => {
   const onDragEnd = (result) => {
-    // dropped outside the list
     if (!result.destination) {
       return;
     }
@@ -101,8 +85,7 @@ export const DND = ({
 
     onChange(newItems);
   };
-  // Normally you would want to split things out into separate components.
-  // But in this example everything is just done in one place for simplicity
+
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable
@@ -157,6 +140,7 @@ export const DraggableImage = ({ image, onDelete }) => (
     <img
       style={{ width: "150px", height: "150px" }}
       src={`http://${BACKEND_HOSTNAME}/${image.url}`}
+      alt="Some good"
     />
     <IconButton onClick={() => onDelete(image)}>
       <CloseIcon />

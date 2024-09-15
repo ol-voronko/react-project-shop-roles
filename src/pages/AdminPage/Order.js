@@ -71,7 +71,6 @@ export const OneFullOrderAdmin = () => {
             <th>Вартість,грн</th>
           </tr>
           {orderGoods.map((orderGood) => (
-            // <div className="order-description-admin">
             <tr>
               <td>
                 <Typography variant="h6" color="text.secondary" component="div">
@@ -108,7 +107,7 @@ export const OneFullOrderAdmin = () => {
         >
           Загальна сума : {total} грн
         </Typography>
-        {/* <CardActions sx={{ display: "flex", justifyContent: "flex-end" }}> */}
+
         <Button
           component={Link}
           to={`/admin/orders`}

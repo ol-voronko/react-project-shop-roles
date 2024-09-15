@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@mui/material";
 import { CartIcon } from "./CartIcon";
+
 export const CartEmpty = () => {
   return (
     <div className="cart">

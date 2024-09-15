@@ -1,16 +1,10 @@
-import { endpoint } from "../PageMain/PageMain.js";
 import * as React from "react";
 import { useParams } from "react-router-dom";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import Typography from "@mui/material/Typography";
-import { Button, CardActionArea, CardActions } from "@mui/material";
+import { Card, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import { api } from "../../APIpages/api.js";
-import { useDispatch } from "react-redux";
-import { cartAdd } from "../../APIpages/reducers/cartReducer.js";
 import { CardGood } from "./CategoryCardGood.js";
+
 const { useGetCategoryByIdQuery } = api;
 
 export const PageCategory = () => {

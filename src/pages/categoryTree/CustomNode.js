@@ -9,8 +9,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { useDragOver } from "@minoru/react-dnd-treeview";
 import styles from "./CustomNode.module.css";
 import { api } from "../../APIpages/api";
-import { BACKEND_HOSTNAME } from "../../APIpages/api";
-import defaultImage from "../../images/box.jpg";
+
 import { EditCatAdmin } from "./EditCatAdmin";
 
 const {
@@ -94,10 +93,6 @@ export const CustomNode = (props) => {
           droppable ? (
             <EditCatAdmin
               defaultCat={{ _id, name, image }}
-              // image={image}
-              // labelText={labelText}
-              // handleChangeText={handleChangeText}
-              // handleSubmit={handleSubmit}
               handleCancel={handleCancel}
             />
           ) : (

@@ -3,6 +3,7 @@ import { api } from "../../APIpages/api";
 import { CardGood } from "../CategoryOne/CategoryCardGood";
 
 const { useGoodsSearchQuery } = api;
+
 export const GoodsSearch = () => {
   const { search } = useParams();
   const { isLoading, data } = useGoodsSearchQuery(search);
