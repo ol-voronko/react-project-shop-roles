@@ -1,8 +1,17 @@
 import { useDispatch } from "react-redux";
 import { CardCart } from "./CardCart";
-import { Button } from "@mui/material";
+import {
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  Typography,
+  IconButton,
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 import { cartClear } from "../../APIpages/reducers/cartReducer";
 import { actionFullOrder } from "../../Thunks/actionFullOrder";
+import shadows from "@mui/material/styles/shadows";
 
 export const CartFull = ({ goods }) => {
   const dispatch = useDispatch();
@@ -12,6 +21,10 @@ export const CartFull = ({ goods }) => {
     0
   );
 
+  const handleOrder = () => {
+    dispatch(actionFullOrder());
+    alert("Ваше замовлення прийнято в обробку.Дякуємо за покупку!");
+  };
   return (
     <div className="cart-full">
       <h3>Ваше замовлення</h3>
@@ -27,11 +40,7 @@ export const CartFull = ({ goods }) => {
       >
         Очистити кошик
       </Button>
-      <Button
-        variant="contained"
-        sx={{ mt: 3, mb: 2 }}
-        onClick={() => dispatch(actionFullOrder())}
-      >
+      <Button variant="contained" sx={{ mt: 3, mb: 2 }} onClick={handleOrder}>
         Оформити замовлення
       </Button>
     </div>

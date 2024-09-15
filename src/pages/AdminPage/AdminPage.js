@@ -10,14 +10,12 @@ import IconButton from "@mui/material/IconButton";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
-
 import ListItemText from "@mui/material/ListItemText";
-
 import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { Link, Route, useParams } from "react-router-dom";
-import { Order } from "./Order.js";
+import { OneFullOrderAdmin, Order } from "./Order.js";
 import { Orders } from "./Orders.js";
 import { AdminGoods } from "./AdminGoods.js";
 import { OneGoodAdminPage } from "./OneGoodAdminPage.js";
@@ -26,8 +24,7 @@ import InputBase from "@mui/material/InputBase";
 import { styled, alpha } from "@mui/material/styles";
 import { CategoryTree } from "../categoryTree/CategoryTree.js";
 import { AdminSearch } from "./AdminSearch.js";
-import { AddGoodAdmin } from "./AddGoodAdmin.js";
-import { AddCatAdmin } from "./AddCatAdmin.js";
+import { AddCatAdmin } from "../categoryTree/AddCatAdmin.js";
 import { UpsertGood } from "./EditGoodAdmin.js";
 
 const drawerWidth = "20vw";
@@ -241,7 +238,7 @@ export const AdminPage = (props) => {
         <Route path="/admin/good/:_id" component={OneGoodAdminPage} />
         <Route path="/admin/goods/:search" component={AdminSearch} />
         <Route path="/admin/orders" component={Orders} />
-        <Route exact path="/admin/order/:_id" component={Order} />
+        <Route exact path="/admin/order/:_id" component={OneFullOrderAdmin} />
         <Route path="/admin/categories" component={CategoryTree} />
         {/* <Route path="/admin/addGood" component={AddGoodAdmin} /> */}
         <Route path="/admin/addGood" component={UpsertGood} />

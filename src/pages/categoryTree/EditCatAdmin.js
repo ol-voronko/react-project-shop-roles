@@ -61,6 +61,7 @@ export const EditCatAdmin = ({ handleCancel, defaultCat }) => {
         updateCategoryState("image", result[0])
       );
   }, [acceptedFiles]);
+
   const updateCategoryState = (key, value) =>
     setCategory((category) => ({ ...category, [key]: value }));
   return (
@@ -115,10 +116,7 @@ export const EditCatAdmin = ({ handleCancel, defaultCat }) => {
           className={`${styles.textField}  ${styles.nodeInput}`}
           value={category.name}
           onChange={(e) => updateCategoryState("name", e.target.value)}
-        >
-          {" "}
-          Category
-        </TextField>
+        ></TextField>
       </Card>
     </div>
   );

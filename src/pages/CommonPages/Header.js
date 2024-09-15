@@ -21,10 +21,10 @@ import {
   selectAuthAcl,
   selectAuthToken,
   selectCart,
-} from "../APIpages/selectors";
+} from "../../APIpages/selectors";
 import { useDispatch, useSelector } from "react-redux";
-import { store } from "../APIpages/store";
-import { authSlice } from "../APIpages/reducers/authReducer";
+import { store } from "../../APIpages/store";
+import { authSlice } from "../../APIpages/reducers/authReducer";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { useState } from "react";
 

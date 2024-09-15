@@ -8,6 +8,7 @@ import {
   CardContent,
   CardActions,
   IconButton,
+  Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useParams, Link } from "react-router-dom";
@@ -296,7 +297,9 @@ const ShowAndEditGood = () => {
 export const EditGoodAdmin = () => {
   return (
     <>
-      <h3>Редагуємо</h3>
+      <Typography variant="h4" color="primary.light">
+        Редагуємо
+      </Typography>
       <ShowAndEditGood />
     </>
   );

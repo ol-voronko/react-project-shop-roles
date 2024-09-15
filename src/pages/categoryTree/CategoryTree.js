@@ -13,6 +13,7 @@ import { theme } from "./theme";
 import styles from "../../App.css";
 
 import { api } from "../../APIpages/api";
+import shadows from "@mui/material/styles/shadows";
 
 const {
   useGetAllCatsQuery,
@@ -25,12 +26,12 @@ export const CategoryTree = () => {
   const sampleData = [];
   // const sortedCategories = [];
   const { isLoading: isQueryLoading, data: queryData } = useGetAllCatsQuery();
-  const { isLoading, data } = useGetAllGoodsQuery();
+  // const { isLoading, data } = useGetAllGoodsQuery();
   const [treeData, setTreeData] = useState(sampleData);
   const [upsertGoodNameQuery] = useUpsertGoodNameMutation();
   const [upsertCatNameQuery] = useUpsertCatNameMutation();
   const draggedItemRef = useRef();
-  if (isLoading || isQueryLoading) {
+  if (isQueryLoading) {
     return <h3>Loading...</h3>;
   }
   // Перетворення отриманого з серверу масива в зручний формат
@@ -42,25 +43,25 @@ export const CategoryTree = () => {
   }
   for (const category of queryData.CategoryFind) {
     let updateCategory;
-    if (category?.parent === null) {
-      updateCategory = {
-        image: category.image,
-        _id: category._id,
-        id: category._id,
-        name: category.name,
-        parent: 0,
-        droppable: true,
-      };
-    } else if (parentsId.includes(category.parent._id)) {
-      updateCategory = {
-        image: category.image,
-        _id: category._id,
-        name: category.name,
-        id: category._id,
-        parent: category.parent ? category.parent._id : 0,
-        droppable: true,
-      };
-    }
+    // if (category?.parent === null) {
+    //   updateCategory = {
+    //     image: category.image,
+    //     _id: category._id,
+    //     id: category._id,
+    //     name: category.name,
+    //     parent: 0,
+    //     droppable: true,
+    //   };
+    // } else if (parentsId.includes(category.parent._id)) {
+    updateCategory = {
+      image: category.image,
+      _id: category._id,
+      name: category.name,
+      id: category._id,
+      parent: category.parent ? category.parent._id : 0,
+      droppable: true,
+    };
+    // }
     // else {
     //   updateCategory = {
     //     ...category,
@@ -121,8 +122,8 @@ export const CategoryTree = () => {
     }
     setTreeData(updateNewTree);
   };
-  console.log("товари ", data.GoodFind.length);
-  console.log("cats ", queryData.CategoryFind.length);
+  // console.log("товари ", data.GoodFind.length);
+  // console.log("cats ", queryData.CategoryFind.length);
   const handleTextChange = (id, value) => {
     const newTree = treeData.map((node) => {
       if (node.id === id) {
@@ -149,8 +150,13 @@ export const CategoryTree = () => {
           <Button
             component={Link}
             to="/admin/addCat"
-            variant="contained"
-            sx={{ mt: 3, mb: 2, alignSelf: "flex-start" }}
+            variant="outlined"
+            sx={{
+              mt: 3,
+              mb: 2,
+              alignSelf: "flex-start",
+              boxShadow: shadows[2],
+            }}
           >
             Додати категорію
           </Button>

@@ -1,9 +1,5 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { graphqlRequestBaseQuery } from "@rtk-query/graphql-request-base-query";
-import { cartSlice } from "./reducers/cartReducer";
-import { authSlice } from "./reducers/authReducer";
-
-import { feedSlice } from "./reducers/feedReducer";
 
 export const BACKEND_HOSTNAME = "shop-roles.node.ed.asmer.org.ua";
 export const api = createApi({
@@ -207,7 +203,7 @@ export const api = createApi({
                   _id
                   name
                   goods{ _id name}
-                  image{url}
+                  image{url _id}
                   parent{_id}
                   }
                 }`,

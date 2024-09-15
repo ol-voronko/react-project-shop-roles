@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
-import { api } from "../APIpages/api";
-import { CardGood } from "./CategoryOne/CategoryCardGood";
+import { api } from "../../APIpages/api";
+import { CardGood } from "../CategoryOne/CategoryCardGood";
 
 const { useGoodsSearchQuery } = api;
 export const GoodsSearch = () => {

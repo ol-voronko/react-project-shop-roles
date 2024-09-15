@@ -11,10 +11,14 @@ export const feedSlice = createSlice({
       state.feed = [...state.feed, ...filtred];
       state.isLoading = isLoading;
     },
+    feedClear(state) {
+      state.feed = [];
+      state.isLoading = false;
+    },
     setFeedIsLoading(state, { payload }) {
       state.isLoading = payload;
     },
   },
 });
 
-export const { feedAdd, setFeedIsLoading } = feedSlice.actions;
+export const { feedAdd, setFeedIsLoading, feedClear } = feedSlice.actions;

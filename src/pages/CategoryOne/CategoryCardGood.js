@@ -10,7 +10,7 @@ import {
   Button,
 } from "@mui/material";
 import { cartAdd } from "../../APIpages/reducers/cartReducer";
-import { endpoint } from "../Categories";
+import { BACKEND_HOSTNAME } from "../../APIpages/api";
 
 export const CardGood = ({ good }) => {
   const dispatch = useDispatch();
@@ -30,7 +30,7 @@ export const CardGood = ({ good }) => {
             style={{ width: "50%", aspectRatio: "1.2", margin: "auto" }}
             image={
               images.length && images[0].url
-                ? endpoint + images[0].url
+                ? `http://${BACKEND_HOSTNAME}/${images[0].url}`
                 : "../images/box.jpg"
             }
             alt={name}

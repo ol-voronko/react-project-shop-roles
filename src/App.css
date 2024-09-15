@@ -184,7 +184,7 @@ th {
 .orders-admin {
   display: flex;
   flex-direction: column;
-  gap: 5vh;
+  gap: 3vh;
 }
 .admin-btns {
   align-self: flex-end;

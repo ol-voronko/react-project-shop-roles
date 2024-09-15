@@ -12,7 +12,11 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { api } from "../../APIpages/api";
-import { uploadFiles, DraggableImage, DND } from "./EditGoodAdmin";
+import {
+  uploadFiles,
+  DraggableImage,
+  DND,
+} from "../AdminPage/EditGoodAdmin.js";
 
 const grid = 8;
 

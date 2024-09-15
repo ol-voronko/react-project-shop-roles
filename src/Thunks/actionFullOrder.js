@@ -14,7 +14,7 @@ export const actionFullOrder = () => async (dispatch, getState) => {
   try {
     await dispatch(api.endpoints.newOrder.initiate({ order }));
     dispatch(cartClear());
-    alert("Замовлення прийнято в обробку");
+    // alert("Замовлення прийнято в обробку");
   } catch {
     console.log("The order could not be completed");
   }

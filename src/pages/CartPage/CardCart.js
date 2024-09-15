@@ -8,7 +8,7 @@ import {
   cartAdd,
   cartDelete,
 } from "../../APIpages/reducers/cartReducer";
-import { endpoint } from "../Categories";
+import { BACKEND_HOSTNAME } from "../../APIpages/api";
 
 export const CardCart = ({ count, good }) => {
   const dispatch = useDispatch();
@@ -31,10 +31,11 @@ export const CardCart = ({ count, good }) => {
             <img
               src={
                 images?.length > 0 && images[0].url
-                  ? endpoint + images[0].url
+                  ? `http://${BACKEND_HOSTNAME}/${images[0].url}`
                   : "../images/box.jpg"
               }
               height={200}
+              width={"100%"}
               alt={name}
             />
           </div>

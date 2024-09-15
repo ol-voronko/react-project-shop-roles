@@ -6,7 +6,7 @@ import {
   Button,
 } from "@mui/material";
 
-import { Carousel } from "../PageGood";
+import { Carousel } from "../GoodPage/Carousel.js";
 
 export const CardGoodAdmin = ({ good, handleDelete }) => {
   const { name, description, price, images, _id } = good;

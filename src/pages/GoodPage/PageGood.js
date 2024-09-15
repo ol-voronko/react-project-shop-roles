@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { endpoint } from "./Categories";
+// import { endpoint } from "./Categories";
 import {
   Button,
   CardActions,
@@ -10,76 +10,13 @@ import {
   CardMedia,
   CardContent,
 } from "@mui/material";
-import { api } from "../APIpages/api";
-import { cartAdd } from "../APIpages/reducers/cartReducer";
+import { api } from "../../APIpages/api";
+import { cartAdd } from "../../APIpages/reducers/cartReducer";
 import { useDispatch } from "react-redux";
 import CloseIcon from "@mui/icons-material/Close";
+import { Carousel } from "./Carousel";
 
 const { useGetGoodByIdQuery } = api;
-export const Carousel = ({ images }) => {
-  const [current, setCurrent] = useState(0);
-
-  return (
-    <div>
-      {images.length > 0 && (
-        <img
-          src={endpoint + images[current].url}
-          style={{
-            width: "50%",
-            aspectRatio: "0.8",
-            position: "relative",
-          }}
-          alt="Some good"
-          onClick={(e) => {
-            const { layerX } = e.nativeEvent;
-            const { clientWidth } = e.target;
-
-            layerX < clientWidth / 3
-              ? setCurrent((current) =>
-                  current === 0 ? (current = images.length - 1) : +current - 1
-                )
-              : setCurrent((current) =>
-                  current === images.length - 1 ? (current = 0) : +current + 1
-                );
-          }}
-        />
-      )}
-      <Thumbnails
-        images={images}
-        current={current}
-        onChange={(index) => setCurrent(index)}
-      />
-    </div>
-  );
-};
-export const Thumbnails = ({ images, current, onChange }) => {
-  return (
-    <div className="thumbnails">
-      {images.length &&
-        images.map((image, index) => (
-          <img
-            src={endpoint + image.url}
-            alt="beauty of nature"
-            onClick={() => onChange(index)}
-            style={
-              index === current
-                ? {
-                    border: " 5px, solid ,black",
-                    padding: "2px",
-                    width: "2vw",
-                  }
-                : {
-                    border: " none",
-                    width: "100px",
-                    boxSizing: "border-box",
-                    width: "2vw",
-                  }
-            }
-          />
-        ))}
-    </div>
-  );
-};
 
 export const PageGood = () => {
   const dispatch = useDispatch();

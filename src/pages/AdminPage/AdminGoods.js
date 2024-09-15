@@ -47,12 +47,12 @@ export const AdminGoods = () => {
 
   return (
     <div className="orders-admin">
-      <h3>Усі товари</h3>
+      <Typography variant="h4">Усі товари</Typography>
       <Button
         component={Link}
         to="/admin/addGood"
-        variant="contained"
-        sx={{ mt: 3, mb: 2, alignSelf: "flex-start" }}
+        variant="outlined"
+        sx={{ mt: 3, mb: 2, alignSelf: "flex-start", boxShadow: shadows[2] }}
       >
         Додати товар
       </Button>

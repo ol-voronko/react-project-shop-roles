@@ -9,7 +9,7 @@ import { IconButton } from "@mui/material";
 import { BACKEND_HOSTNAME } from "../../APIpages/api";
 import ModeIcon from "@mui/icons-material/Mode";
 import CloseIcon from "@mui/icons-material/Close";
-import { Carousel } from "../PageGood";
+import { Carousel } from "../GoodPage/PageGood";
 
 import { useState } from "react";
 import { EditGoodAdmin } from "./EditGoodAdmin";
@@ -65,42 +65,6 @@ export const OneGoodAdminPage = () => {
         ) : (
           <CardGoodAdmin good={data?.GoodFindOne} handleDelete={handleDelete} />
         )}
-        {/**<Crasivyi /> */}
-        {/* <CardMedia
-          component="div"
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "5vh",
-            justifyContent: "space-between",
-            // height: "50%",
-            marginTop: "5vh",
-          }}
-        >
-          <Carousel images={images} />
-        </CardMedia>
-        <CardContent sx={{ marginTop: "5vh" }}>
-          <Typography
-            // gutterBottom
-            variant="h4"
-            component="div"
-            color="primary.light"
-          >
-            {name}
-          </Typography>
-
-          <Typography
-            variant="h5"
-            color="text.secondary"
-            gutterBottom
-            component="div"
-          >
-            {description}
-          </Typography>
-          <Typography variant="h5" color="text.primary" gutterBottom>
-            {price} грн
-          </Typography>
-        </CardContent> */}
       </Card>
     </div>
   );

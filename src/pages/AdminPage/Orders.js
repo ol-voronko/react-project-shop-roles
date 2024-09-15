@@ -1,18 +1,18 @@
-import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
 import { Button, Card, Typography } from "@mui/material";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 // import { orders } from "../data";
 import shadows from "@mui/material/styles/shadows";
-import { api } from "../../APIpages/api";
 import { useEffect, useRef } from "react";
-import {
-  selectAllFeeds,
-  selectFeedCount,
-  selectFeedIsLoading,
-} from "../../APIpages/selectors";
 import { useDispatch } from "react-redux";
+import { api } from "../../APIpages/api";
+import { feedClear } from "../../APIpages/reducers/feedReducer";
+import { selectAllFeeds, selectFeedIsLoading } from "../../APIpages/selectors";
 import { actionGetMoreOrders } from "../../Thunks/actionGetMoreOrders";
-import { createDateOFOrder, createTimeOfOrder } from "../History";
+import {
+  createDateOFOrder,
+  createTimeOfOrder,
+} from "../History/OrderHistory.js";
 
 const { useGetAllOrdersQuery } = api;
 
@@ -55,7 +55,7 @@ const Order = ({ order }) => {
 };
 export const Orders = () => {
   const dispatch = useDispatch();
-  const feedCount = useSelector(selectFeedCount);
+  // const feedCount = useSelector(selectFeedCount);
   const feeds = useSelector(selectAllFeeds);
   const feedisLoading = useSelector(selectFeedIsLoading);
   // const { isLoading, data } = useGetAllOrdersQuery(feedCount);
@@ -73,10 +73,14 @@ export const Orders = () => {
       dispatch(actionGetMoreOrders());
     }
   };
+
   useEffect(() => {
+    dispatch(actionGetMoreOrders());
+
     window.addEventListener("scroll", onScrollHandler);
     return () => {
       window.removeEventListener("scroll", onScrollHandler);
+      dispatch(feedClear());
     };
   }, []);
 

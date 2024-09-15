@@ -1,15 +1,16 @@
 import { Switch, Route } from "react-router-dom";
 import { ProtectedRoute } from "./ProtectedRoute";
-import { Login } from "../Login";
-import { Register } from "../Register";
+import { Login } from "../CommonPages/Login";
+import { Register } from "../CommonPages/Register";
 import { PageCategory } from "../CategoryOne/PageCategory";
-import { PageGood } from "../PageGood";
-import { GoodsSearch } from "../GoodsSearch";
+import { PageGood } from "../GoodPage/PageGood.js";
+import { GoodsSearch } from "../CommonPages/GoodsSearch";
 import { AdminPage } from "../AdminPage/AdminPage";
-import { PageMain } from "../Categories";
-import { History } from "../History";
+import { PageMain } from "../PageMain/PageMain.js";
+import { History } from "../History/History.js";
 import { Cart } from "../CartPage/Cart";
-import { Page404 } from "../../App";
+import { Page404 } from "../CommonPages/AsideFooter404.js";
+
 export const RoutesList = () => (
   <Switch>
     <Route path="/" component={PageMain} exact />

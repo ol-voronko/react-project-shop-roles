@@ -1,4 +1,4 @@
-import { endpoint } from "../Categories.js";
+import { endpoint } from "../PageMain/PageMain.js";
 import * as React from "react";
 import { useParams } from "react-router-dom";
 import Card from "@mui/material/Card";

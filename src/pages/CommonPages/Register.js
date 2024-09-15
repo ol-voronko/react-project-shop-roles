@@ -11,9 +11,9 @@ import Box from "@mui/material/Box";
 import { Copyright } from "./Login";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { actionFullRegister } from "../Thunks/actionFullRegister";
-import { selectAuthError, selectAuthToken } from "../APIpages/selectors";
-import { authSlice } from "../APIpages/reducers/authReducer";
+import { actionFullRegister } from "../../Thunks/actionFullRegister";
+import { selectAuthError, selectAuthToken } from "../../APIpages/selectors";
+import { authSlice } from "../../APIpages/reducers/authReducer";
 
 const defaultTheme = createTheme();
 

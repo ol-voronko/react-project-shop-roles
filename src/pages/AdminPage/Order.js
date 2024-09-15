@@ -1,11 +1,14 @@
 import { Link, useParams } from "react-router-dom";
 import { Button, Card, Typography } from "@mui/material";
 import { api } from "../../APIpages/api";
-import { createDateOFOrder, createTimeOfOrder } from "../History";
+import {
+  createDateOFOrder,
+  createTimeOfOrder,
+} from "../History/OrderHistory.js";
 
 const { useGetOrderByIdQuery } = api;
 
-export const Order = () => {
+export const OneFullOrderAdmin = () => {
   const { _id } = useParams();
   const { isLoading, data } = useGetOrderByIdQuery({ _id });
   console.log(data);
