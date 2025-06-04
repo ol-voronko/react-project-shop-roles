@@ -1,70 +1,94 @@
-# Getting Started with Create React App
+# Онлайн-магазин
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Опис
 
-## Available Scripts
+Це навчальний проект — простий онлайн-магазин з адмінпанеллю для керування товарами та категоріями.  
+Фронтенд написаний на React, використовує Material UI та RTK Query для роботи з GraphQL API.
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## Технології
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+![React](https://img.shields.io/badge/React-18.2-blue)
+![GraphQL](https://img.shields.io/badge/GraphQL-E10098?logo=graphql&logoColor=white)
+![RTK Query](https://img.shields.io/badge/RTK--Query-593d88?logo=redux&logoColor=white)
+![MUI](https://img.shields.io/badge/MUI-%230081CB.svg?&logo=mui&logoColor=white)
+![CSS](https://img.shields.io/badge/CSS-Style-blue)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- React, React Router
+- RTK Query для роботи з GraphQL API
+- Матеріал UI (MUI) для компонентів інтерфейсу
+- Стилізація за допомогою CSS та MUI (без SCSS)
 
-### `npm test`
+---
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Запуск проекту локально
 
-### `npm run build`
+Для роботи фронтенд-застосунку не потрібно запускати бекенд локально —  
+бекенд розгорнутий на віддаленому сервері з власною адресою для тестування (пісочницею).  
+Тому, щоб запустити проєкт, достатньо:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. Клонуйте репозиторій на свій комп’ютер:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+   git clone https://github.com/ol-voronko/react-project-shop-roles.git
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+2. Перейдіть у директорію проєкту:
 
-### `npm run eject`
+   cd назва-репозиторію
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+3. Встановіть залежності:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+   npm install
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+4. Запустити фронтенд
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+   npm start
 
-## Learn More
+Фронтенд буде звертатись до бекенду автоматично за налаштованою адресою API.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+> **Увага:** раніше проект був задеплоєний на хостингу,
+> але через відсутність HTTPS у запитах і закриття сервера хостингу,
+> зараз публічного деплою немає.
+> Тому проект можна запускати тільки локально.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+---
 
-### Code Splitting
+## Авторизація
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+- Реалізовано сторінки логіну та реєстрації користувачів
+- Після успішного входу токен зберігається локально (localStorage)
+- Використання токена для захисту приватних маршрутів (адмінка)
+- До адмінських сторінок має доступ лише користувач з роллю адміністратора
+- При спробі потрапити на захищений роут без авторизації або без ролі адміністратора користувача перенаправляє на головну сторінку
 
-### Analyzing the Bundle Size
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Функціонал
 
-### Making a Progressive Web App
+- Вивід товарів та категорій з дерева з вкладеністю
+- CRUD операції для товарів і категорій
+- Авторизація користувача
+- Додавання і редагування товарів з можливістю завантаження фото через drag & drop
+- Адмінська панель для керування товарами та категоріями
+- Можливість зробити замовлення (для користувача)
+- Перегляд користувачем історії замовлень
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+---
 
-### Advanced Configuration
+## Що я вивчила
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+- Роботу з React і React Router
+- Створення запитів і мутацій через GraphQL з RTK Query
+- Використання Material UI для швидкої та зручної розробки UI
+- Управління станом та кешування даних через RTK Query
+- Побудову дерева категорій з вкладеними елементами
+- Організацію авторизації та захист приватних маршрутів
+- Роботу з подіями drag & drop для зручного завантаження зображень
 
-### Deployment
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## План розвитку
 
-### `npm run build` fails to minify
+- Додати адаптивність дизайну
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+---
